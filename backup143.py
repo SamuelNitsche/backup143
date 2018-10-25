@@ -23,7 +23,7 @@ if _platform == "win32" or _platform == "win64":
     except ImportError as e:
         log = LogginSystem('service')
         log.write(str(e))
-elif _platform == "linux" or _platform == "linux2":
+elif _platform == "linux" or _platform == "linux2" or _platform == "darwin":
     log = LogginSystem('service')
     log.write('Detected OS: Linux')
     try:
