@@ -12,6 +12,7 @@ import http.cookies
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from bin.both.config import config_var
+from pathlib import Path
 
 PORT_NUMBER = config_var('WEB', 'PORT')
 API_PORT_NUMBER = config_var('API', 'PORT')
@@ -225,7 +226,11 @@ class myHandler(BaseHTTPRequestHandler):
         except:
             return False
         
-		
+file_dir = os.path.dirname(__file__)
+rel_path = "../../tmp/"
+tmp_folder_path = Path(os.path.join(file_dir, rel_path))
+if tmp_folder_path.is_dir() == False:
+    os.makedirs(tmp_folder_path)
 
 server = HTTPServer(('', int(PORT_NUMBER)), myHandler)
 log = logsys('http')

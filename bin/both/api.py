@@ -11,6 +11,7 @@ import platform
 from bin.both.dbcon import dbmanager
 import http.cookies
 from bin.both.config import config_var
+from pathlib import Path
 
 LISTENON = config_var('LOCAL', 'LISTEN')
 PORT_NUMBER = config_var('API', 'PORT')
@@ -130,7 +131,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response = response + "<waiting>" + str(count_waiting[0]) + "</waiting>"
                 response = response + "<failed>" + str(count_failed[0]) + "</failed>"
                 response = response + "<tasks>"
-                qry = db.query("SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
+                qry = db.query("SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
                 for row in qry:
                     response = response + "<task>"
                     response = response + "<id>"+str(row[0])+"</id>"
@@ -304,10 +305,9 @@ class myHandler(BaseHTTPRequestHandler):
                 planned_time = form['planned_time'].value
                 status = form['status'].value
                 backupid = form['backupid'].value
-                onetime = form['onetime'].value
 				
                 db = dbmanager()
-                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,last_run,planned_time,status,backupid,onetime) VALUES ('"+name+"','"+action+"','"+schedule+"','"+last_run+"','"+planned_time+"','"+status+"','"+backupid+"','"+onetime+"');")
+                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,last_run,planned_time,status,backupid) VALUES ('"+name+"','"+action+"','"+schedule+"','"+last_run+"','"+planned_time+"','"+status+"','"+backupid+"');")
 				
                 response = "<response>"
                 response = response + "<info>"
@@ -407,10 +407,9 @@ class myHandler(BaseHTTPRequestHandler):
                 planned_time = form['planned_time'].value
                 status = form['status'].value
                 backupid = form['backupid'].value
-                onetime = form['onetime'].value
 				
                 db = dbmanager()
-                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',action='"+action+"',schedule='"+schedule+"',last_run='"+last_run+"',planned_time='"+planned_time+"',status='"+status+"',backupid='"+backupid+"',onetime='"+onetime+"' WHERE id='"+id+"';")
+                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',action='"+action+"',schedule='"+schedule+"',last_run='"+last_run+"',planned_time='"+planned_time+"',status='"+status+"',backupid='"+backupid+"' WHERE id='"+id+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
@@ -579,7 +578,11 @@ class myHandler(BaseHTTPRequestHandler):
         except:
             return False
         
-
+file_dir = os.path.dirname(__file__)
+rel_path = "../../tmp/"
+tmp_folder_path = Path(os.path.join(file_dir, rel_path))
+if tmp_folder_path.is_dir() == False:
+    os.makedirs(tmp_folder_path)
 
 server = HTTPServer(('', int(PORT_NUMBER)), myHandler)
 log = logsys('http')

@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS "143_tasks" (
 	last_run datetime,
 	planned_time datetime,
 	status VARCHAR(255),
-	backupid integer,
+	backupid integer
 );
 
 CREATE TABLE IF NOT EXISTS "143_pool" (
