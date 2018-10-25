@@ -1,0 +1,190 @@
+[14.10.2018 11:16:08]  Detected OS: Linux
+[14.10.2018 11:16:08]  Received Command "start"
+[14.10.2018 11:51:07]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 11:51:07]  Detected OS: Linux
+[14.10.2018 11:51:07]  Received Command "stop"
+[14.10.2018 11:51:10]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 11:51:10]  Detected OS: Linux
+[14.10.2018 11:51:10]  Received Command "start"
+[14.10.2018 11:51:34]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 11:51:34]  Detected OS: Linux
+[14.10.2018 11:51:34]  Received Command "stop"
+[14.10.2018 11:51:35]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 11:51:35]  Detected OS: Linux
+[14.10.2018 11:51:35]  Received Command "start"
+[14.10.2018 12:15:48]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 12:15:48]  Detected OS: Linux
+[14.10.2018 12:15:48]  Received Command "stop"
+[14.10.2018 13:55:38]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:55:38]  Detected OS: Linux
+[14.10.2018 13:55:38]  Received Command "start"
+[14.10.2018 13:57:03]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:57:03]  Detected OS: Linux
+[14.10.2018 13:57:03]  Received Command "stop"
+[14.10.2018 13:57:05]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:57:05]  Detected OS: Linux
+[14.10.2018 13:57:05]  Received Command "start"
+[14.10.2018 13:57:31]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:57:31]  Detected OS: Linux
+[14.10.2018 13:57:31]  Received Command "stop"
+[14.10.2018 13:57:31]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:57:31]  Detected OS: Linux
+[14.10.2018 13:57:31]  Received Command "start"
+[14.10.2018 13:57:54]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:57:54]  Detected OS: Linux
+[14.10.2018 13:57:54]  Received Command "stop"
+[14.10.2018 13:57:56]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:57:56]  Detected OS: Linux
+[14.10.2018 13:57:56]  Received Command "start"
+[14.10.2018 13:58:16]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:58:16]  Detected OS: Linux
+[14.10.2018 13:58:16]  Received Command "stop"
+[14.10.2018 13:58:17]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 13:58:17]  Detected OS: Linux
+[14.10.2018 13:58:17]  Received Command "start"
+[14.10.2018 17:54:57]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:54:57]  Detected OS: Linux
+[14.10.2018 17:54:57]  Received Command "stop"
+[14.10.2018 17:55:03]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:55:03]  Detected OS: Linux
+[14.10.2018 17:55:03]  Received Command "start"
+[14.10.2018 17:56:24]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:56:24]  Detected OS: Linux
+[14.10.2018 17:56:24]  Received Command "stop"
+[14.10.2018 17:56:30]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:56:31]  Detected OS: Linux
+[14.10.2018 17:56:31]  Received Command "start"
+[14.10.2018 17:57:08]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:57:08]  Detected OS: Linux
+[14.10.2018 17:57:08]  Received Command "stop"
+[14.10.2018 17:57:13]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:57:13]  Detected OS: Linux
+[14.10.2018 17:57:13]  Received Command "start"
+[14.10.2018 17:58:44]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:58:44]  Detected OS: Linux
+[14.10.2018 17:58:44]  Received Command "stop"
+[14.10.2018 17:58:53]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:58:53]  Detected OS: Linux
+[14.10.2018 17:58:53]  Received Command "start"
+[14.10.2018 17:58:56]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:58:56]  Detected OS: Linux
+[14.10.2018 17:58:56]  Received Command "stop"
+[14.10.2018 17:59:28]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 17:59:28]  Detected OS: Linux
+[14.10.2018 17:59:28]  Received Command "start"
+[14.10.2018 19:19:36]  Detected Python version: 3.6.6 (default, Sep 12 2018, 18:26:19) 
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]]
+[14.10.2018 19:19:36]  Detected OS: Linux
+[14.10.2018 19:19:36]  Received Command "stop"
+[15.10.2018 19:30:01]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:30:01]  Detected OS: Windows
+[15.10.2018 19:30:05]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:30:05]  Detected OS: Windows
+[15.10.2018 19:33:05]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:33:05]  Detected OS: Windows
+[15.10.2018 19:33:09]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:33:09]  Detected OS: Windows
+[15.10.2018 19:33:16]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:33:16]  Detected OS: Windows
+[15.10.2018 19:35:58]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:35:58]  Detected OS: Windows
+[15.10.2018 19:38:36]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:38:36]  Detected OS: Windows
+[15.10.2018 19:40:40]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:40:40]  Detected OS: Windows
+[15.10.2018 19:40:41]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:40:41]  Detected OS: Windows
+[15.10.2018 19:42:50]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:42:50]  Detected OS: Windows
+[15.10.2018 19:43:11]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:43:11]  Detected OS: Windows
+[15.10.2018 19:43:21]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:43:21]  Detected OS: Windows
+[15.10.2018 19:44:03]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:44:03]  Detected OS: Windows
+[15.10.2018 19:44:08]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:44:08]  Detected OS: Windows
+[15.10.2018 19:44:26]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:44:26]  Detected OS: Windows
+[15.10.2018 19:44:30]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:44:30]  Detected OS: Windows
+[15.10.2018 19:44:35]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:44:35]  Detected OS: Windows
+[15.10.2018 19:47:02]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:47:02]  Detected OS: Windows
+[15.10.2018 19:47:24]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:47:24]  Detected OS: Windows
+[15.10.2018 19:48:08]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:48:08]  Detected OS: Windows
+[15.10.2018 19:48:20]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:48:20]  Detected OS: Windows
+[15.10.2018 19:48:52]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:48:52]  Detected OS: Windows
+[15.10.2018 19:49:38]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:49:38]  Detected OS: Windows
+[15.10.2018 19:50:49]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:50:49]  Detected OS: Windows
+[15.10.2018 19:51:36]  Detected Python version: 3.6.6 (v3.6.6:4cf1f54eb7, Jun 27 2018, 02:47:15) [MSC v.1900 32 bit (Intel)]
+[15.10.2018 19:51:36]  Detected OS: Windows
+[18.10.2018 09:33:13]  Detected Python version: 3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:06:47) [MSC v.1914 32 bit (Intel)]
+[18.10.2018 09:33:13]  Detected OS: Windows
+[18.10.2018 09:34:03]  Detected Python version: 3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:06:47) [MSC v.1914 32 bit (Intel)]
+[18.10.2018 09:34:03]  Detected OS: Windows
+[18.10.2018 09:36:59]  Detected Python version: 3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:06:47) [MSC v.1914 32 bit (Intel)]
+[18.10.2018 09:36:59]  Detected OS: Windows
+[18.10.2018 09:38:09]  Detected Python version: 3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:06:47) [MSC v.1914 32 bit (Intel)]
+[18.10.2018 09:38:09]  Detected OS: Windows
+[18.10.2018 09:40:35]  Detected Python version: 3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:06:47) [MSC v.1914 32 bit (Intel)]
+[18.10.2018 09:40:35]  Detected OS: Windows
+[18.10.2018 09:42:10]  Detected Python version: 3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:06:47) [MSC v.1914 32 bit (Intel)]
+[18.10.2018 09:42:10]  Detected OS: Windows
+[18.10.2018 09:53:03]  Detected Python version: 3.7.0 (v3.7.0:1bf9cc5093, Jun 27 2018, 04:06:47) [MSC v.1914 32 bit (Intel)]
+[18.10.2018 09:53:03]  Detected OS: Windows
+[25.10.2018 10:17:47]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:17:47]  Detected OS: Windows
+[25.10.2018 10:18:49]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:18:49]  Detected OS: Windows
+[25.10.2018 10:19:04]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:19:04]  Detected OS: Windows
+[25.10.2018 10:24:18]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:24:18]  Detected OS: Windows
+[25.10.2018 10:24:26]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:24:26]  Detected OS: Windows
+[25.10.2018 10:30:12]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:30:12]  Detected OS: Windows
+[25.10.2018 10:30:35]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:30:35]  Detected OS: Windows
+[25.10.2018 10:31:13]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:31:13]  Detected OS: Windows
+[25.10.2018 10:31:55]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:31:55]  Detected OS: Windows
+[25.10.2018 10:32:56]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:32:56]  Detected OS: Windows
+[25.10.2018 10:33:22]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:33:22]  Detected OS: Windows
+[25.10.2018 10:34:31]  Detected Python version: 3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 17:26:49) [MSC v.1900 32 bit (Intel)]
+[25.10.2018 10:34:31]  Detected OS: Windows

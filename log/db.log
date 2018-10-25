@@ -1,0 +1,61 @@
+[25.10.2018 10:44:49]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:44:57]  Successfully connected to backup143.db
+[25.10.2018 10:44:57]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:44:57]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:44:57]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:44:58]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:44:58]  Successfully connected to backup143.db
+[25.10.2018 10:44:58]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:44:58]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:44:58]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:44:58]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:45:07]  Successfully connected to backup143.db
+[25.10.2018 10:45:07]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:45:07]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:45:07]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:45:07]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:45:08]  Successfully connected to backup143.db
+[25.10.2018 10:45:08]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:45:08]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:45:08]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:45:08]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:45:17]  Successfully connected to backup143.db
+[25.10.2018 10:45:17]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:45:17]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:45:17]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:45:18]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:45:18]  Successfully connected to backup143.db
+[25.10.2018 10:45:18]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:45:18]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:45:18]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:45:18]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:45:27]  Successfully connected to backup143.db
+[25.10.2018 10:45:27]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:45:27]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:45:27]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:45:27]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:45:28]  Successfully connected to backup143.db
+[25.10.2018 10:45:28]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:45:28]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:45:28]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:45:28]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:45:37]  Successfully connected to backup143.db
+[25.10.2018 10:45:37]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:45:37]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:45:38]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:45:38]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:45:38]  Successfully connected to backup143.db
+[25.10.2018 10:45:38]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:45:38]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:45:38]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:45:38]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:46:44]  Successfully connected to backup143.db
+[25.10.2018 10:46:44]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:46:44]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:46:45]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:46:45]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
+[25.10.2018 10:46:45]  Successfully connected to backup143.db
+[25.10.2018 10:46:45]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'running';"
+[25.10.2018 10:46:45]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'waiting';"
+[25.10.2018 10:46:45]  Executing Query: "SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1' AND t.status = 'failed';"
+[25.10.2018 10:46:46]  Executing Query: "SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid,t.onetime FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '1';"
