@@ -81,15 +81,67 @@ class Pool {
 	
 	open_poolsettings(id){
 		var poolinfo = this.get_poolinfo(id);
-		var html = "Name: <input type='text' name='name' value='"+poolinfo[1]+"'/><br/>";
-		html = html + "File System: <input type='text' name='system' value='"+poolinfo[2]+"'/><br/>";
-		html = html + "Host: <input type='text' name='host' value='"+poolinfo[3]+"'/><br/>";
-		html = html + "Port: <input type='text' name='port' value='"+poolinfo[4]+"'/><br/>";
-		html = html + "Username: <input type='text' name='username' value='"+poolinfo[5]+"'/><br/>";
-		html = html + "Password: <input type='text' name='password' value='"+poolinfo[6]+"'/><br/>";
-		html = html + "Path: <input type='text' name='path' value='"+poolinfo[7]+"'/><br/>";
+		var html = "Name: <input type='text' id='pool_name' value='"+poolinfo[1]+"'/><br/>";
+		html = html + "File System: <input type='text' id='pool_system' value='"+poolinfo[2]+"'/><br/>";
+		html = html + "Host: <input type='text' id='pool_host' value='"+poolinfo[3]+"'/><br/>";
+		html = html + "Port: <input type='text' id='pool_port' value='"+poolinfo[4]+"'/><br/>";
+		html = html + "Username: <input type='text' id='pool_username' value='"+poolinfo[5]+"'/><br/>";
+		html = html + "Password: <input type='text' id='pool_password' value='"+poolinfo[6]+"'/><br/>";
+		html = html + "Path: <input type='text' id='pool_path' value='"+poolinfo[7]+"'/><br/>";
 		html = html + "<button onclick='var pool = new Pool(); pool.delete_pool(\""+String(id)+"\");'>Delete</button><button onclick='var pool = new Pool(); pool.update_pool(\""+String(id)+"\");'>Update</button>";
 		showpopup("Settings: "+poolinfo[1], html);
+	}
+	
+	delete_pool(id){
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+		
+		var self = this;
+		
+		$.ajax({
+			type: "post",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/deletepool",
+			dataType: "xml",
+			async: false,
+			data: { "id": id },
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				showpopup("Success", "Successfully deleted Pool!");
+				$('#js_backuplist').html(self.get_backups());
+			}
+		});
+	}
+	
+	update_pool(id){
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+		
+		var self = this;
+		
+		var name = $('#pool_name').val();
+		var system = $('#pool_system').val();
+		var host = $('#pool_host').val();
+		var port = $('#pool_port').val();
+		var username = $('#pool_username').val();
+		var password = $('#pool_password').val();
+		var path = $('#pool_path').val();
+		
+		$.ajax({
+			type: "post",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/updatepool",
+			dataType: "xml",
+			async: false,
+			data: { "id": id, "name": name, "system": system, "host": host, "port": port, "username": username, "password": password, "path": path },
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				showpopup("Success", "Successfully updated Pool!");
+				$('#js_poollist').html(self.get_pools());
+			}
+		});
 	}
 	
 }

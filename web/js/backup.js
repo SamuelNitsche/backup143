@@ -88,20 +88,70 @@ class Backup {
 	
 	open_backupsettings(id){
 		var backupinfo = this.get_backupinfo(id);
-		var html = "Source Pool: <input type='text' name='name' value='"+backupinfo[1]+"'/><br/>";
-		html = html + "Destination Pool: <input type='text' name='system' value='"+backupinfo[2]+"'/><br/>";
-		html = html + "Compare: <input type='text' name='host' value='"+backupinfo[3]+"'/><br/>";
-		html = html + "Encrypt: <input type='text' name='port' value='"+backupinfo[4]+"'/><br/>";
-		html = html + "Compression: <input type='text' name='username' value='"+backupinfo[5]+"'/><br/>";
+		var html = "Source Pool: <input type='text' id='backup_pool_src' value='"+backupinfo[1]+"'/><br/>";
+		html = html + "Destination Pool: <input type='text' id='backup_pool_dst' value='"+backupinfo[2]+"'/><br/>";
+		html = html + "Compare: <input type='text' id='backup_compare' value='"+backupinfo[3]+"'/><br/>";
+		html = html + "Encrypt: <input type='text' id='backup_encrypt' value='"+backupinfo[4]+"'/><br/>";
+		html = html + "Compression: <input type='text' id='backup_compression' value='"+backupinfo[5]+"'/><br/>";
 		html = html + "<button onclick='var backup = new Backup(); backup.delete_backup(\""+String(id)+"\");'>Delete</button><button onclick='var backup = new Backup(); backup.update_backup(\""+String(id)+"\");'>Update</button>";
 		showpopup("Settings", html);
+	}
+	
+	delete_backup(id){
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+		
+		var self = this;
+		
+		$.ajax({
+			type: "post",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/deletebackup",
+			dataType: "xml",
+			async: false,
+			data: { "id": id },
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				showpopup("Success", "Successfully deleted Backup!");
+				$('#js_backuplist').html(self.get_backups());
+			}
+		});
+	}
+	
+	update_backup(id){
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+		
+		var self = this;
+		
+		var pool_src = $('#backup_pool_src').val();
+		var pool_dst = $('#backup_pool_dst').val();
+		var compare = $('#backup_compare').val();
+		var encrypt = $('#backup_encrypt').val();
+		var compression = $('#backup_compression').val();
+		
+		$.ajax({
+			type: "post",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/updatebackup",
+			dataType: "xml",
+			async: false,
+			data: { "id": id, "pool_src": pool_src, "pool_dst": pool_dst, "compare": compare, "encrypt": encrypt, "compression": compression },
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				showpopup("Success", "Successfully updated Backup!");
+				$('#js_backuplist').html(self.get_backups());
+			}
+		});
 	}
 	
 }
 
 $( document ).ready(function() {
 	if ($("#js_backuplist").length > 0){
-		var backup = new Backup();
-		$('#js_backuplist').html(backup.get_backups());
+		var pool = new Backup();
+		$('#js_backuplist').html(pool.get_backups());
 	}
 });

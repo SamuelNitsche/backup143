@@ -66,7 +66,7 @@ class myHandler(BaseHTTPRequestHandler):
                     response = response + "<port>"+str(row[4])+"</port>"
                     response = response + "<username>"+str(row[5])+"</username>"
                     response = response + "<password>"+str(row[6])+"</password>"
-                    response = response + "<password>"+str(row[7])+"</password>"
+                    response = response + "<path>"+str(row[7])+"</path>"
                     response = response + "<ownerid>"+str(row[8])+"</ownerid>"
                     response = response + "</pool>"
                 response = response + "</pools>"
@@ -142,7 +142,6 @@ class myHandler(BaseHTTPRequestHandler):
                     response = response + "<planned_time>"+str(row[5])+"</planned_time>"
                     response = response + "<status>"+str(row[6])+"</status>"
                     response = response + "<backupid>"+str(row[7])+"</backupid>"
-                    response = response + "<backupid>"+str(row[8])+"</backupid>"
                     response = response + "</task>"
                 response = response + "</tasks>"
                 response = response + "</data>"
@@ -334,7 +333,7 @@ class myHandler(BaseHTTPRequestHandler):
 
                 id = form['id'].value
                 name = form['name'].value
-                system = form['name'].value
+                system = form['system'].value
                 host = form['host'].value
                 port = form['port'].value
                 username = form['username'].value
@@ -343,14 +342,14 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("UPDATE '143_pool' SET name='"+name+"', system='"+system+"', host='"+host+"', port='"+port+"', username='"+username+"', password='"+password+"', path='"+path+"' WHERE id='"+id+"' AND userid='"+userid+"';")
+                qry = db.query("UPDATE '143_pool' SET name='"+name+"', system='"+system+"', host='"+host+"', port='"+port+"', username='"+username+"', password='"+password+"', path='"+path+"' WHERE id='"+id+"' AND ownerid='"+userid+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
                 response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
+                response = response + "<id>"+id+"</id>"
                 response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
@@ -375,14 +374,14 @@ class myHandler(BaseHTTPRequestHandler):
                 compression = form['compression'].value
 				
                 db = dbmanager()
-                qry = db.query("UPDATE '143_backup' SET pool_src='"+pool_src+"',pool_dst='"+pool_dst+"',compare='"+compare+"',encrypt='"+compare+"',compression='"+compression+"' WHERE id='"+id+"';")
+                qry = db.query("UPDATE '143_backups' SET pool_src='"+pool_src+"',pool_dst='"+pool_dst+"',compare='"+compare+"',encrypt='"+encrypt+"',compression='"+compression+"' WHERE id='"+id+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
                 response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
+                response = response + "<id>"+id+"</id>"
                 response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
@@ -416,7 +415,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
                 response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
+                response = response + "<id>"+id+"</id>"
                 response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
@@ -438,14 +437,14 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("REMOVE FROM '143_pool' WHERE id='"+id+"' AND userid='"+userid+"';")
+                qry = db.query("DELETE FROM '143_pool' WHERE id='"+id+"' AND ownerid='"+userid+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
                 response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
+                response = response + "<id>"+id+"</id>"
                 response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
@@ -463,16 +462,17 @@ class myHandler(BaseHTTPRequestHandler):
                     environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
 
                 id = form['id'].value
+                userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("REMOVE FROM '143_backup' WHERE id='"+id+"';")
+                qry = db.query("DELETE FROM '143_backup' WHERE id='"+id+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
                 response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
+                response = response + "<id>"+id+"</id>"
                 response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
@@ -490,16 +490,17 @@ class myHandler(BaseHTTPRequestHandler):
                     environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
 
                 id = form['id'].value
+                userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("REMOVE FROM '143_tasks' WHERE id='"+id+"';")
+                qry = db.query("DELETE FROM '143_tasks' WHERE id='"+id+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
                 response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
+                response = response + "<id>"+id+"</id>"
                 response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)

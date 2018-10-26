@@ -1,0 +1,31 @@
+[] JavaScript Klassen überdenken (Werden im jetztigen aufbau so eigentlich garnicht benötigt sondern nur die Funktionen)
+[] JavaScript bei allen Funktionen die mit der API arbeiten den wert <response> -> <info> -> <status> kontrollieren. Alles gut= OK. Nicht gut= ERROR. Bei Error wird zudem im info <message> mitgesendet.
+[] JavaScript eingaben beim bearbeiten kontrollieren
+[] JavaScript beim löschen eines Pools überprüfen ob dieses mit einem Backup verknüpft ist
+[] Redirects funktionieren nichtmehr korrekt => Wenn eingeloggt direkt weiterleiten an /panel/index.html wenn nicht eingeloggt weiterleiten an index.html.
+[] API überprüft noch nicht welcher USER die Anfrage sendet! User kann also Fremde Backups / Pools etc. Löschen!!
+[] CSS Für die Einstellungen (Backups Pools etc)
+[] Passwort vergessen beim Login
+[] Webinterface Settings um Passwort, E-Mail-Adresse zu ändern etc.
+[] Webinterface Settings für den Admin zusätzliche die werte der Tabelle 143_options.
+[] Webinterface Permissions für den Admin Account (Admin Account einfach Account mit id 1 oder muss noch eine zusätzliche Spalte mit usertype oder so erstellt werden?)
+[] Webinterface E-Mail Einstellungen für jeden Account (Welche E-Mails er erhalten möchte Siehe DB)
+[] Tasks / Queue Logik überdenken (Bisher: DB mit waiting, running, failed und dem Interval / lastrun. Tasks jeweils in einem Thread (damit mehrere gleichzeitig können))
+[] Webserver und API: Sessions nach einer gewissen Zeit löschen
+[] Website aufbau dauert mir zu lange (Vermutlich im zusammenhang mit den JS Funktionen. Bei einer API Abfrage macht JS 2 Abfragen. Die erste wird benötigt um den Header X-APIPORT zu holen. Gibt es eine andere Möglichkeit (zb. in web/js/tasks.js => get_runningtasks()))
+[] Sessions auch in der Datenbank abspeichern ? (Admin könnte user rauswerfen etc)
+[] Im Webinterfaces beim bearbeiten poolid mit dem Pool Namen ersetzen und dropdown als auswahl
+[] Welche Kompressionsarten wollen wir einführen? (GZIP, ...)
+[] Welche Verschlüsselung wollen wir verwenden ? (Vorschlag: Einfach OpenSSL (https://stackoverflow.com/questions/16056135/how-to-use-openssl-to-encrypt-decrypt-files))
+[] Überlegen: Wenn ein Backup Komprimiert (ZIP) ist: Wie vergleichen mit den aktuellen Daten (hash, binary) ? Zuerst alles Entpacken und vergleichen oder kann man die Funktionen direkt im Zip irgendwie starten ? Stimmen die Hashes etc. dann (Komprimierte Datei vs Originale Datei ja eigentlich nicht)?
+[] Backup Logik (bin/both/backup.py)
+[] CIFS FileSystem integrieren (bin/both/fs_cifs.py)
+[] FTP FileSystem integrieren (bin/both/fs_ftp.py)
+[] Local FileSystem integrieren (bin/both/fs_local.py)
+[] NFS FileSystem integrieren (bin/both/fs_nfs.py)
+[] SFTP FileSystem integrieren (bin/both/fs_sftp.py)
+[] SMB FileSystem integrieren (bin/both/fs_smb.py)
+Alle FileSystems sollten immer dieselbe Logik / denselben Aufbau haben (connenct(), get_tree(), get_hash()) usw. In backup.py dann je nach ausgewähltem 'system' von der DB das richtige File importieren import bin.both.fs_xy as source // source.connect() usw.
+[] Script wie ein Service starten (start/stop/restart/status) mit Lock File etc. Script soll dann im Hintergrund laufen ohne direkten output.
+
+Wenn du KP hast wo was ist schreib mir einfach ;)
