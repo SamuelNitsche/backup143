@@ -1,9 +1,9 @@
 [] JavaScript Klassen überdenken (Werden im jetztigen aufbau so eigentlich garnicht benötigt sondern nur die Funktionen)
-[] JavaScript bei allen Funktionen die mit der API arbeiten den wert <response> -> <info> -> <status> kontrollieren. Alles gut= OK. Nicht gut= ERROR. Bei Error wird zudem im info <message> mitgesendet.
+[X] JavaScript bei allen Funktionen die mit der API arbeiten den wert <response> -> <info> -> <status> kontrollieren. Alles gut= OK. Nicht gut= ERROR. Bei Error wird zudem im info <message> mitgesendet.
 [] JavaScript eingaben beim bearbeiten kontrollieren
-[] JavaScript beim löschen eines Pools überprüfen ob dieses mit einem Backup verknüpft ist
-[] Redirects funktionieren nichtmehr korrekt => Wenn eingeloggt direkt weiterleiten an /panel/index.html wenn nicht eingeloggt weiterleiten an index.html.
-[] API überprüft noch nicht welcher USER die Anfrage sendet! User kann also Fremde Backups / Pools etc. Löschen!!
+[X] JavaScript beim löschen eines Pools überprüfen ob dieses mit einem Backup verknüpft ist
+[X] Redirects funktionieren nichtmehr korrekt => Wenn eingeloggt direkt weiterleiten an /panel/index.html wenn nicht eingeloggt weiterleiten an index.html.
+[X] API überprüft noch nicht welcher USER die Anfrage sendet! User kann also Fremde Backups / Pools etc. Löschen!!
 [] CSS Für die Einstellungen (Backups Pools etc)
 [] Passwort vergessen beim Login
 [] Webinterface Settings um Passwort, E-Mail-Adresse zu ändern etc.
@@ -41,6 +41,7 @@ Alle FileSystems sollten immer dieselbe Logik / denselben Aufbau haben (connenct
 [] Skript für Windows unter Dienste hinzufügen (mit PyWin32)
 [] Prüfen ob Skript als root / Administrator gestartet wurde (Besser wegen Dateiberechtigungen)
 [] SQL INJECTION verhinden (bin/both/dbcon.py). Korrekt wäre es wenn man die Variablen nicht direkt im SQL Befehl verwendet wie bei OOP PHP. Jedoch müsste man dann die Funktion query() umschreiben und kp wie am besten.
+[] Code vereinheiltichen. Teilweise werden returns von FUnktionen direkt verwendet, teilweise als Variable definiert und die Variable verwendet.
 
 Bezüglich der in der Liste vorhandenen Fragen: Schreib mir einfach auf WAPP oder direkt in die TODO Liste ;)
 

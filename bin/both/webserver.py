@@ -21,9 +21,6 @@ class myHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
 	
-        self.send_response(202)
-        self.send_header('X-APIPORT',API_PORT_NUMBER)
-	
         log = logsys('http')
         log.write(str(self.client_address[0]) + ' - "' + str(self.requestline) + '"')
 
@@ -89,6 +86,7 @@ class myHandler(BaseHTTPRequestHandler):
                     html = open(web_folder_path + self.path, "rb").read()
                 self.send_response(200)
                 self.send_header('Content-type',mimetype)
+                self.send_header('X-APIPORT',API_PORT_NUMBER)
                 self.end_headers()
                 self.wfile.write(html)
             return
@@ -138,6 +136,7 @@ class myHandler(BaseHTTPRequestHandler):
 
             print("Your name is: %s" % form["your_name"].value)
             self.send_response(200)
+            self.send_header('X-APIPORT',API_PORT_NUMBER)
             self.end_headers()
             self.wfile.write(bytes("Thanks %s !" % form["your_name"].value, 'utf8'))
             return  

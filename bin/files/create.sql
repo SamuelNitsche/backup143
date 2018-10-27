@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS "143_tasks" (
 	schedule integer,
 	last_run datetime,
 	planned_time datetime,
-	status VARCHAR(255),
+	state VARCHAR(255),
 	backupid integer
 );
 

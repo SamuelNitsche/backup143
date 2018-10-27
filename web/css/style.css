@@ -282,6 +282,36 @@ body{
 	color:#000;
 }
 
+#popup-content h2 {
+	padding-top:3px;
+	padding-bottom:3px;
+	color: #9BB2FF;
+	font-size: 32px;
+	width:100%;
+	border-bottom: 1px solid #9BB2FF;
+}
+
+#popup-content label {
+	color: #000;
+	font-weight: bold;
+	font-family: 'Exo', sans-serif;
+	font-size:18px;
+}
+
+#popup-content input {
+	width: 250px;
+	height: 30px;
+	background: transparent;
+	border: 1px solid #000;
+	border-radius: 2px;
+	color: #000;
+	font-family: 'Exo', sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	padding: 4px;
+	margin-top: 10px;
+}
+
 #popup-content table {
 	color:#000;
 }

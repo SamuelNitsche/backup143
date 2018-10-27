@@ -19,19 +19,25 @@ class Pool {
 			async: false,
 			xhrFields: { withCredentials:true },
 			success: function(data) {
-				var p_pools = $(data).find('amount').text();
-				if( p_pools > 0){
-					p_html = p_html + "<table>";
-					p_html = p_html + "<tr><th>Name</th><th>FileSystem</th><th>Host</th></tr>";
-					$(data).find('pool').each(function(){
-						var p_id = $(this).find('id').text();
-						var p_name = $(this).find('name').text();
-						var p_system = $(this).find('system').text();
-						var p_host = $(this).find('host').text();
-						p_html = p_html + "<tr onclick='var pool = new Pool(); pool.open_poolsettings(\""+String(p_id)+"\");'><td>" + p_name + "</td><td>" + p_system + "</td><td>" + p_host + "</td></tr>";
-					});
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					var p_pools = $(data).find('amount').text();
+					if( p_pools > 0){
+						p_html = p_html + "<table>";
+						p_html = p_html + "<tr><th>Name</th><th>FileSystem</th><th>Host</th></tr>";
+						$(data).find('pool').each(function(){
+							var p_id = $(this).find('id').text();
+							var p_name = $(this).find('name').text();
+							var p_system = $(this).find('system').text();
+							var p_host = $(this).find('host').text();
+							p_html = p_html + "<tr onclick='var pool = new Pool(); pool.open_poolsettings(\""+String(p_id)+"\");'><td>" + p_name + "</td><td>" + p_system + "</td><td>" + p_host + "</td></tr>";
+						});
+					} else {
+						p_html = p_html + "<h3>No Pools!</h3>";
+					}
 				} else {
-					p_html = p_html + "<h3>No Pools!</h3>";
+					var error = $(data).find('message').text();
+					return error;
 				}
 			}
 		});
@@ -61,19 +67,25 @@ class Pool {
 			async: false,
 			xhrFields: { withCredentials:true },
 			success: function(data) {
-				$(data).find('pool').each(function(){
-					if($(this).find('id').text() == id){
-						p_id = $(this).find('id').text();
-						p_name = $(this).find('name').text();
-						p_system = $(this).find('system').text();
-						p_host = $(this).find('host').text();
-						p_port = $(this).find('port').text();
-						p_username = $(this).find('username').text();
-						p_password = $(this).find('password').text();
-						p_path = $(this).find('path').text();
-						p_ownerid = $(this).find('ownerid').text();
-					}
-				});
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					$(data).find('pool').each(function(){
+						if($(this).find('id').text() == id){
+							p_id = $(this).find('id').text();
+							p_name = $(this).find('name').text();
+							p_system = $(this).find('system').text();
+							p_host = $(this).find('host').text();
+							p_port = $(this).find('port').text();
+							p_username = $(this).find('username').text();
+							p_password = $(this).find('password').text();
+							p_path = $(this).find('path').text();
+							p_ownerid = $(this).find('ownerid').text();
+						}
+					});
+				} else {
+					var error = $(data).find('message').text();
+					return error;
+				}
 			}
 		});
 		return Array(p_id,p_name,p_system,p_host,p_port,p_username,p_password,p_path,p_ownerid);
@@ -81,15 +93,17 @@ class Pool {
 	
 	open_poolsettings(id){
 		var poolinfo = this.get_poolinfo(id);
-		var html = "Name: <input type='text' id='pool_name' value='"+poolinfo[1]+"'/><br/>";
-		html = html + "File System: <input type='text' id='pool_system' value='"+poolinfo[2]+"'/><br/>";
-		html = html + "Host: <input type='text' id='pool_host' value='"+poolinfo[3]+"'/><br/>";
-		html = html + "Port: <input type='text' id='pool_port' value='"+poolinfo[4]+"'/><br/>";
-		html = html + "Username: <input type='text' id='pool_username' value='"+poolinfo[5]+"'/><br/>";
-		html = html + "Password: <input type='text' id='pool_password' value='"+poolinfo[6]+"'/><br/>";
-		html = html + "Path: <input type='text' id='pool_path' value='"+poolinfo[7]+"'/><br/>";
-		html = html + "<button onclick='var pool = new Pool(); pool.delete_pool(\""+String(id)+"\");'>Delete</button><button onclick='var pool = new Pool(); pool.update_pool(\""+String(id)+"\");'>Update</button>";
-		showpopup("Settings: "+poolinfo[1], html);
+        var html = "<table style='width:100%;'>";
+		html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='pool_name' value='"+poolinfo[1]+"'/></td></tr>";
+		html = html + "<tr><td><label>File System: </label></td><td><input type='text' id='pool_system' value='"+poolinfo[2]+"'/></td></tr>";
+		html = html + "<tr><td><label>Host: </label></td><td><input type='text' id='pool_host' value='"+poolinfo[3]+"'/></td></tr>";
+		html = html + "<tr><td><label>Port: </label></td><td><input type='text' id='pool_port' value='"+poolinfo[4]+"'/></td></tr>";
+		html = html + "<tr><td><label>Username: </label></td><td><input type='text' id='pool_username' value='"+poolinfo[5]+"'/></td></tr>";
+		html = html + "<tr><td><label>Password: </label></td><td><input type='text' id='pool_password' value='"+poolinfo[6]+"'/></td></tr>";
+		html = html + "<tr><td><label>Path: </label></td><td><input type='text' id='pool_path' value='"+poolinfo[7]+"'/></td></tr>";
+		html = html + "<tr><td><button onclick='var pool = new Pool(); pool.delete_pool(\""+String(id)+"\");'>Delete</button></td><td><button onclick='var pool = new Pool(); pool.update_pool(\""+String(id)+"\");'>Update</button></td></tr>";
+		html = html + "</table>";
+        showpopup("Settings: "+poolinfo[1], html);
 	}
 	
 	delete_pool(id){
@@ -108,8 +122,14 @@ class Pool {
 			data: { "id": id },
 			xhrFields: { withCredentials:true },
 			success: function(data) {
-				showpopup("Success", "Successfully deleted Pool!");
-				$('#js_backuplist').html(self.get_backups());
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					showpopup("Success", "Successfully deleted Pool!");
+					$('#js_poollist').html(self.get_pools());
+				} else {
+					var error = $(data).find('message').text()
+					showpopup("ERROR", error);
+				}
 			}
 		});
 	}
@@ -138,8 +158,14 @@ class Pool {
 			data: { "id": id, "name": name, "system": system, "host": host, "port": port, "username": username, "password": password, "path": path },
 			xhrFields: { withCredentials:true },
 			success: function(data) {
-				showpopup("Success", "Successfully updated Pool!");
-				$('#js_poollist').html(self.get_pools());
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					showpopup("Success", "Successfully updated Pool!");
+					$('#js_poollist').html(self.get_pools());
+				} else {
+					var error = $(data).find('message').text()
+					showpopup("ERROR", error);
+				}
 			}
 		});
 	}

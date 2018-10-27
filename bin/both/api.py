@@ -116,11 +116,11 @@ class myHandler(BaseHTTPRequestHandler):
 # GET TASKS
             elif self.path=="/get/tasks":
                 db = dbmanager()
-                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.status = 'running';")
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.state = 'running';")
                 count_running = qry.fetchone()
-                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.status = 'waiting';")
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.state = 'waiting';")
                 count_waiting = qry.fetchone()
-                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.status = 'failed';")
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.state = 'failed';")
                 count_failed = qry.fetchone()
                 response = "<response>"
                 response = response + "<info>"
@@ -131,7 +131,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response = response + "<waiting>" + str(count_waiting[0]) + "</waiting>"
                 response = response + "<failed>" + str(count_failed[0]) + "</failed>"
                 response = response + "<tasks>"
-                qry = db.query("SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.status,t.backupid FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
+                qry = db.query("SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.state,t.backupid FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
                 for row in qry:
                     response = response + "<task>"
                     response = response + "<id>"+str(row[0])+"</id>"
@@ -140,7 +140,7 @@ class myHandler(BaseHTTPRequestHandler):
                     response = response + "<schedule>"+str(row[3])+"</schedule>"
                     response = response + "<last_run>"+str(row[4])+"</last_run>"
                     response = response + "<planned_time>"+str(row[5])+"</planned_time>"
-                    response = response + "<status>"+str(row[6])+"</status>"
+                    response = response + "<state>"+str(row[6])+"</state>"
                     response = response + "<backupid>"+str(row[7])+"</backupid>"
                     response = response + "</task>"
                 response = response + "</tasks>"
@@ -302,11 +302,11 @@ class myHandler(BaseHTTPRequestHandler):
                 schedule = form['schedule'].value
                 last_run = form['last_run'].value
                 planned_time = form['planned_time'].value
-                status = form['status'].value
+                state = form['state'].value
                 backupid = form['backupid'].value
 				
                 db = dbmanager()
-                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,last_run,planned_time,status,backupid) VALUES ('"+name+"','"+action+"','"+schedule+"','"+last_run+"','"+planned_time+"','"+status+"','"+backupid+"');")
+                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,last_run,planned_time,state,backupid) VALUES ('"+name+"','"+action+"','"+schedule+"','"+last_run+"','"+planned_time+"','"+state+"','"+backupid+"');")
 				
                 response = "<response>"
                 response = response + "<info>"
@@ -404,11 +404,11 @@ class myHandler(BaseHTTPRequestHandler):
                 schedule = form['schedule'].value
                 last_run = form['last_run'].value
                 planned_time = form['planned_time'].value
-                status = form['status'].value
+                state = form['state'].value
                 backupid = form['backupid'].value
 				
                 db = dbmanager()
-                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',action='"+action+"',schedule='"+schedule+"',last_run='"+last_run+"',planned_time='"+planned_time+"',status='"+status+"',backupid='"+backupid+"' WHERE id='"+id+"';")
+                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',action='"+action+"',schedule='"+schedule+"',last_run='"+last_run+"',planned_time='"+planned_time+"',state='"+state+"',backupid='"+backupid+"' WHERE id='"+id+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
@@ -437,24 +437,70 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("DELETE FROM '143_pool' WHERE id='"+id+"' AND ownerid='"+userid+"';")
+                
+                qry = db.query("SELECT COUNT(*) FROM '143_backups' WHERE pool_src = '" + id + "' AND ownerid='" + userid + "' OR pool_dst = '" + id + "' AND ownerid='" + userid + "';")
+                usercheck = qry.fetchone()
 				
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>"+id+"</id>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Deleted Pool!"))
+                if(usercheck[0] == 1):
+				
+                    qry = db.query("SELECT COUNT(*) FROM '143_backups' WHERE pool_src = '" + id + "' OR pool_dst = '" + id + "';")
+                    usedbycount = qry.fetchone()
+                
+                    if usedbycount[0] == 0:
+				
+                        qry = db.query("DELETE FROM '143_pool' WHERE id='"+id+"';")
+				
+                        response = "<response>"
+                        response = response + "<info>"
+                        response = response + "<status>OK</status>"
+                        response = response + "</info>"
+                        response = response + "<data>"
+                        response = response + "<id>"+id+"</id>"
+                        response = response + "</data>"
+                        response = response + "</response>"
+                        self.send_response(200)
+                        self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                        self.send_header('Access-Control-Allow-Credentials','true')
+                        self.send_header('Content-type','text/xml')
+                        self.end_headers()
+                        self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                        log = logsys('api')
+                        log.write(str("Successful: Deleted Pool!"))
+					
+                    else:
+				
+                        response = "<response>"
+                        response = response + "<info>"
+                        response = response + "<status>ERROR</status>"
+                        response = response + "<message>This Pool is currently used by a Backup. Please delete Backup first!</message>"
+                        response = response + "</info>"
+                        response = response + "</response>"
+                        self.send_response(200)
+                        self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                        self.send_header('Access-Control-Allow-Credentials','true')
+                        self.send_header('Content-type','text/xml')
+                        self.end_headers()
+                        self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                        log = logsys('api')
+                        log.write(str("ERROR: Pool is currently used by Backup!"))
+
+                else:
+
+                        response = "<response>"
+                        response = response + "<info>"
+                        response = response + "<status>ERROR</status>"
+                        response = response + "<message>This Pool doesn't exist or doesn't belong to you!</message>"
+                        response = response + "</info>"
+                        response = response + "</response>"
+                        self.send_response(200)
+                        self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                        self.send_header('Access-Control-Allow-Credentials','true')
+                        self.send_header('Content-type','text/xml')
+                        self.end_headers()
+                        self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                        log = logsys('api')
+                        log.write(str("ERROR: Pool not found for user!"))
+						
             elif self.path=="/post/deletebackup":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -465,24 +511,48 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("DELETE FROM '143_backup' WHERE id='"+id+"';")
+                qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p on b.pool_src = p.id OR b.pool_dst = p.id WHERE p.ownerid = '" + userid + "' AND b.id='" + id + "';")
+                usercheck = qry.fetchone()
 				
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>"+id+"</id>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Deleted Backup!"))
+                if(usercheck[0] == 1):
+
+                    qry = db.query("DELETE FROM '143_backups' WHERE id='"+id+"';")
+                    qry = db.query("DELETE FROM '143_tasks' WHERE backupid='"+id+"';")
+                    
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "<data>"
+                    response = response + "<id>"+id+"</id>"
+                    response = response + "</data>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Deleted Backup!"))
+                    
+                else:
+                
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>This Backup doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Backup not found for user!"))
+                        
             elif self.path=="/post/deletetask":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -493,24 +563,47 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("DELETE FROM '143_tasks' WHERE id='"+id+"';")
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id OR bu.pool_dst = p.id WHERE p.ownerid = '" + userid + "' AND t.id = '" + id + "';")
+                usercheck = qry.fetchone()
 				
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>"+id+"</id>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Deleted Task!"))
+                if(usercheck[0] == 1):
+                
+                    qry = db.query("DELETE FROM '143_tasks' WHERE id='"+id+"';")
+                    
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "<data>"
+                    response = response + "<id>"+id+"</id>"
+                    response = response + "</data>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Deleted Task!"))
+                    
+                else:
+                
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>This Task doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Task not found for user!"))
+                
             else:
                 response = "<response>"
                 response = response + "<status>ERROR</status>"

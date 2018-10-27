@@ -19,32 +19,38 @@ class Backup {
 			async: false,
 			xhrFields: { withCredentials:true },
 			success: function(data) {
-				var b_backups = $(data).find('amount').text();
-				if( b_backups > 0){
-					b_html = b_html + "<table>";
-					b_html = b_html + "<tr><th>Source</th><th>Destination</th><th>Compare</th><th>Encryption</th><th>Compression</th></tr>";
-					$(data).find('backup').each(function(){
-						var b_id = $(this).find('id').text();
-						var b_pool_src = $(this).find('pool_src').text();
-						var b_pool_dst = $(this).find('pool_dst').text();
-						var b_compare = $(this).find('compare').text();
-						var b_encrypt = $(this).find('encrypt').text();
-						var b_compression = $(this).find('compression').text();
-						
-						var pool = new Pool();
-						var srcpoolinfo = pool.get_poolinfo(b_pool_src);
-						var dstpoolinfo = pool.get_poolinfo(b_pool_dst);
-						
-						if(b_encrypt == '0'){
-							b_encrypt = 'inactive';
-						} else {
-							b_encrypt = 'active';
-						}
-						
-						b_html = b_html + "<tr onclick='var backup = new Backup(); backup.open_backupsettings(\""+String(b_id)+"\");'><td>" + srcpoolinfo[1] + "</td><td>" + dstpoolinfo[1] + "</td><td>" + b_compare + "</td><td>" + b_encrypt + "</td><td>" + b_compression + "</td></tr>";
-					});
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					var b_backups = $(data).find('amount').text();
+					if( b_backups > 0){
+						b_html = b_html + "<table>";
+						b_html = b_html + "<tr><th>Source</th><th>Destination</th><th>Compare</th><th>Encryption</th><th>Compression</th></tr>";
+						$(data).find('backup').each(function(){
+							var b_id = $(this).find('id').text();
+							var b_pool_src = $(this).find('pool_src').text();
+							var b_pool_dst = $(this).find('pool_dst').text();
+							var b_compare = $(this).find('compare').text();
+							var b_encrypt = $(this).find('encrypt').text();
+							var b_compression = $(this).find('compression').text();
+							
+							var pool = new Pool();
+							var srcpoolinfo = pool.get_poolinfo(b_pool_src);
+							var dstpoolinfo = pool.get_poolinfo(b_pool_dst);
+							
+							if(b_encrypt == '0'){
+								b_encrypt = 'inactive';
+							} else {
+								b_encrypt = 'active';
+							}
+							
+							b_html = b_html + "<tr onclick='var backup = new Backup(); backup.open_backupsettings(\""+String(b_id)+"\");'><td>" + srcpoolinfo[1] + "</td><td>" + dstpoolinfo[1] + "</td><td>" + b_compare + "</td><td>" + b_encrypt + "</td><td>" + b_compression + "</td></tr>";
+						});
+					} else {
+						b_html = b_html + "<h3>No Backups!</h3>";
+					}
 				} else {
-					b_html = b_html + "<h3>No Backups!</h3>";
+					var error = $(data).find('message').text();
+					return error;
 				}
 			}
 		});
@@ -71,16 +77,22 @@ class Backup {
 			async: false,
 			xhrFields: { withCredentials:true },
 			success: function(data) {
-				$(data).find('backup').each(function(){
-					if($(this).find('id').text() == id){
-						b_id = $(this).find('id').text();
-						b_pool_src = $(this).find('pool_src').text();
-						b_pool_dst = $(this).find('pool_dst').text();
-						b_compare = $(this).find('compare').text();
-						b_encrypt = $(this).find('encrypt').text();
-						b_compression = $(this).find('compression').text();
-					}
-				});
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					$(data).find('backup').each(function(){
+						if($(this).find('id').text() == id){
+							b_id = $(this).find('id').text();
+							b_pool_src = $(this).find('pool_src').text();
+							b_pool_dst = $(this).find('pool_dst').text();
+							b_compare = $(this).find('compare').text();
+							b_encrypt = $(this).find('encrypt').text();
+							b_compression = $(this).find('compression').text();
+						}
+					});
+				} else {
+					var error = $(data).find('message').text();
+					return error;
+				}
 			}
 		});
 		return Array(b_id,b_pool_src,b_pool_dst,b_compare,b_encrypt,b_compression);
@@ -88,13 +100,15 @@ class Backup {
 	
 	open_backupsettings(id){
 		var backupinfo = this.get_backupinfo(id);
-		var html = "Source Pool: <input type='text' id='backup_pool_src' value='"+backupinfo[1]+"'/><br/>";
-		html = html + "Destination Pool: <input type='text' id='backup_pool_dst' value='"+backupinfo[2]+"'/><br/>";
-		html = html + "Compare: <input type='text' id='backup_compare' value='"+backupinfo[3]+"'/><br/>";
-		html = html + "Encrypt: <input type='text' id='backup_encrypt' value='"+backupinfo[4]+"'/><br/>";
-		html = html + "Compression: <input type='text' id='backup_compression' value='"+backupinfo[5]+"'/><br/>";
-		html = html + "<button onclick='var backup = new Backup(); backup.delete_backup(\""+String(id)+"\");'>Delete</button><button onclick='var backup = new Backup(); backup.update_backup(\""+String(id)+"\");'>Update</button>";
-		showpopup("Settings", html);
+        var html = "<table style='width:100%;'>";
+		html = html + "<tr><td><label>Source Pool: </label></td><td><input type='text' id='backup_pool_src' value='"+backupinfo[1]+"'/></td></tr>";
+		html = html + "<tr><td><label>Destination Pool: </label></td><td><input type='text' id='backup_pool_dst' value='"+backupinfo[2]+"'/></td></tr>";
+		html = html + "<tr><td><label>Compare: </label></td><td><input type='text' id='backup_compare' value='"+backupinfo[3]+"'/></td></tr>";
+		html = html + "<tr><td><label>Encrypt: </label></td><td><input type='text' id='backup_encrypt' value='"+backupinfo[4]+"'/></td></tr>";
+		html = html + "<tr><td><label>Compression: </label></td><td><input type='text' id='backup_compression' value='"+backupinfo[5]+"'/></td></tr>";
+		html = html + "<tr><td><button onclick='var backup = new Backup(); backup.delete_backup(\""+String(id)+"\");'>Delete</button></td><td><button onclick='var backup = new Backup(); backup.update_backup(\""+String(id)+"\");'>Update</button></td></tr>";
+		html = html + "</table>";
+        showpopup("Settings", html);
 	}
 	
 	delete_backup(id){
@@ -113,8 +127,14 @@ class Backup {
 			data: { "id": id },
 			xhrFields: { withCredentials:true },
 			success: function(data) {
-				showpopup("Success", "Successfully deleted Backup!");
-				$('#js_backuplist').html(self.get_backups());
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					showpopup("Success", "Successfully deleted Backup!");
+					$('#js_backuplist').html(self.get_backups());
+				} else {
+					var error = $(data).find('message').text()
+					showpopup("ERROR", error);
+				}
 			}
 		});
 	}
@@ -141,8 +161,14 @@ class Backup {
 			data: { "id": id, "pool_src": pool_src, "pool_dst": pool_dst, "compare": compare, "encrypt": encrypt, "compression": compression },
 			xhrFields: { withCredentials:true },
 			success: function(data) {
-				showpopup("Success", "Successfully updated Backup!");
-				$('#js_backuplist').html(self.get_backups());
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					showpopup("Success", "Successfully updated Backup!");
+					$('#js_backuplist').html(self.get_backups());
+				} else {
+					var error = $(data).find('message').text()
+					showpopup("ERROR", error);
+				}
 			}
 		});
 	}
