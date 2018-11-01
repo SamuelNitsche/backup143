@@ -1,5 +1,6 @@
 import sqlite3
 import os.path
+from datetime import datetime
 from bin.both.logging import LogginSystem as logsys
 
 class dbmanager():
@@ -48,6 +49,11 @@ class dbmanager():
                 return
         else:
             return
+
+    def log(self, task, value):
+        date = datetime.now()
+        query = f'INSERT INTO \'143_tasklog\' (date, taskid, value) VALUES (\'{date}\', {task}, \'{value}\')'
+        self.query(query)
 
     def __exit__(self):
         log = logsys('db')
