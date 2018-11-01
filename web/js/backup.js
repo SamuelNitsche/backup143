@@ -172,6 +172,51 @@ class Backup {
 			}
 		});
 	}
+    
+    create_backup(id){
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+		
+		var self = this;
+		
+		var pool_src = $('#backup_pool_src').val();
+		var pool_dst = $('#backup_pool_dst').val();
+		var compare = $('#backup_compare').val();
+		var encrypt = $('#backup_encrypt').val();
+		var compression = $('#backup_compression').val();
+		
+		$.ajax({
+			type: "post",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/createbackup",
+			dataType: "xml",
+			async: false,
+			data: { "id": id, "pool_src": pool_src, "pool_dst": pool_dst, "compare": compare, "encrypt": encrypt, "compression": compression },
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					showpopup("Success", "Successfully created Backup!");
+					$('#js_backuplist').html(self.get_backups());
+				} else {
+					var error = $(data).find('message').text()
+					showpopup("ERROR", error);
+				}
+			}
+		});
+	}
+    
+    createpopup(){
+        var html = "<table style='width:100%;'>";
+		html = html + "<tr><td><label>Source Pool: </label></td><td><input type='text' id='backup_pool_src'/></td></tr>";
+		html = html + "<tr><td><label>Destination Pool: </label></td><td><input type='text' id='backup_pool_dst'/></td></tr>";
+		html = html + "<tr><td><label>Compare: </label></td><td><input type='text' id='backup_compare'/></td></tr>";
+		html = html + "<tr><td><label>Encrypt: </label></td><td><input type='text' id='backup_encrypt'/></td></tr>";
+		html = html + "<tr><td><label>Compression: </label></td><td><input type='text' id='backup_compression'/></td></tr>";
+        html = html + "<tr><td><button onclick='var backup = new Backup(); backup.create_backup();'>Create</button></td></tr>";
+        showpopup("Create Backup", html);
+    }
 	
 }
 

@@ -301,15 +301,12 @@ class myHandler(BaseHTTPRequestHandler):
                 compression = form['compression'].value
 				
                 db = dbmanager()
-                qry = db.query("INSERT INTO '143_backup' (pool_src,pool_dst,compare,encrypt,compression) VALUES ('"+pool_src+"','"+pool_dst+"','"+compare+"','"+encrypt+"','"+compression+"');")
+                qry = db.query("INSERT INTO '143_backups' (pool_src,pool_dst,compare,encrypt,compression) VALUES ('"+pool_src+"','"+pool_dst+"','"+compare+"','"+encrypt+"','"+compression+"');")
 				
                 response = "<response>"
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
-                response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
                 self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
