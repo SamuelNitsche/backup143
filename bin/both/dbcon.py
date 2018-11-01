@@ -1,7 +1,7 @@
 import sqlite3
 import os.path
 from datetime import datetime
-from bin.both.logging import LogginSystem as logsys
+from bin.both.log import LogginSystem as logsys
 
 class dbmanager():
     def __init__(self):

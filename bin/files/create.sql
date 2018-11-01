@@ -60,10 +60,10 @@ CREATE TABLE IF NOT EXISTS "143_tasks" (
 	name VARCHAR(255),
 	action VARCHAR(255),
 	schedule VARCHAR(255),
-	last_run datetime,
+	last_run VARCHAR(255),
 	state VARCHAR(255),
 	backupid integer,
-    backuptyp VARCHAR(255)
+	backuptyp VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS "143_pool" (

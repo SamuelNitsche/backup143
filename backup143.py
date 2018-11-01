@@ -9,7 +9,7 @@ from bin.both.dbcon import dbmanager
 db = dbmanager()
 db.create()
 
-from bin.both.logging import LogginSystem
+from bin.both.log import LogginSystem
 log = LogginSystem('service')
 log.write('Detected Python version: ' + sys.version)
 	

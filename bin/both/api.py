@@ -6,7 +6,7 @@ import __main__
 import _thread
 from datetime import datetime
 import hashlib
-from bin.both.logging import LogginSystem as logsys
+from bin.both.log import LogginSystem as logsys
 import platform
 from bin.both.dbcon import dbmanager
 import http.cookies

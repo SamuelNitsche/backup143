@@ -3,12 +3,14 @@ import zipfile
 from bin.both.dbcon import dbmanager
 
 class Backup:
-    def __init__(self, source, dest):
+    def __init__(self, source, dest, task):
         self.db = dbmanager()
         self.source = source
         self.dest = dest
+        self.task = task
 
     def backup(self):
+        self.db.query('UPDATE ')
         zipf = zipfile.ZipFile(self.dest, "w")
         os.chdir(self.source)
         for subdir, dirs, files in os.walk("."):
