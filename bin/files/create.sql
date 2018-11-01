@@ -59,11 +59,11 @@ CREATE TABLE IF NOT EXISTS "143_tasks" (
 	id integer PRIMARY KEY AUTOINCREMENT,
 	name VARCHAR(255),
 	action VARCHAR(255),
-	schedule integer,
+	schedule VARCHAR(255),
 	last_run datetime,
-	planned_time datetime,
 	state VARCHAR(255),
-	backupid integer
+	backupid integer,
+    backuptyp VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS "143_pool" (

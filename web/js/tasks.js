@@ -59,10 +59,9 @@ class Task {
 		var t_action = "";
 		var t_schedule = "";
 		var t_last_run = "";
-		var t_planned_time = "";
 		var t_state = "";
 		var t_backupid = "";
-		var t_onetime = "";
+		var t_backuptyp = "";
 		
 		$.ajax({
 			type: "get",
@@ -80,10 +79,9 @@ class Task {
 							t_action = $(this).find('action').text();
 							t_schedule = $(this).find('schedule').text();
 							t_last_run = $(this).find('last_run').text();
-							t_planned_time = $(this).find('planned_time').text();
 							t_state = $(this).find('state').text();
 							t_backupid = $(this).find('backupid').text();
-							t_onetime = $(this).find('onetime').text();
+							t_backuptyp = $(this).find('backuptyp').text();
 						}
 					});
 				} else {
@@ -92,7 +90,7 @@ class Task {
 				}
 			}
 		});
-		return Array(t_id,t_name,t_action,t_schedule,t_last_run,t_planned_time,t_state,t_backupid,t_onetime);
+		return Array(t_id,t_name,t_action,t_schedule,t_last_run,t_state,t_backupid,t_backuptyp);
 	}
 	
 	get_tasklog(id){

@@ -131,7 +131,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response = response + "<waiting>" + str(count_waiting[0]) + "</waiting>"
                 response = response + "<failed>" + str(count_failed[0]) + "</failed>"
                 response = response + "<tasks>"
-                qry = db.query("SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.planned_time,t.state,t.backupid FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
+                qry = db.query("SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.state,t.backupid,t.backuptyp FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
                 for row in qry:
                     response = response + "<task>"
                     response = response + "<id>"+str(row[0])+"</id>"
@@ -139,9 +139,9 @@ class myHandler(BaseHTTPRequestHandler):
                     response = response + "<action>"+str(row[2])+"</action>"
                     response = response + "<schedule>"+str(row[3])+"</schedule>"
                     response = response + "<last_run>"+str(row[4])+"</last_run>"
-                    response = response + "<planned_time>"+str(row[5])+"</planned_time>"
-                    response = response + "<state>"+str(row[6])+"</state>"
-                    response = response + "<backupid>"+str(row[7])+"</backupid>"
+                    response = response + "<state>"+str(row[5])+"</state>"
+                    response = response + "<backupid>"+str(row[6])+"</backupid>"
+                    response = response + "<backuptyp>"+str(row[7])+"</backuptyp>"
                     response = response + "</task>"
                 response = response + "</tasks>"
                 response = response + "</data>"
@@ -232,24 +232,52 @@ class myHandler(BaseHTTPRequestHandler):
                     headers=self.headers,
                     environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
 
-                name = form['name'].value
-                system = form['name'].value
-                host = form['host'].value
-                port = form['port'].value
-                username = form['username'].value
-                password = form['password'].value
-                path = form['path'].value
+                try:
+                    name = form['name'].value
+                except KeyError:
+                    name = ""
+                    
+                try:
+                    system = form['system'].value
+                except KeyError:
+                    system=""
+                    
+                try:
+                    host = form['host'].value
+                except KeyError:
+                    host = ""
+                    
+                try:
+                    port = form['port'].value
+                except KeyError:
+                    port = ""
+                    
+                try:
+                    username = form['username'].value
+                except KeyError:
+                    username = ""
+                    
+                try:
+                    password = form['password'].value
+                except KeyError:
+                    password = ""
+                
+                try:
+                    path = form['path'].value
+                except KeyError:
+                    path = ""
+                    
                 userid = self.get_session('userid')
-				
+
                 db = dbmanager()
-                qry = db.query("INSERT INTO '143_pool' (name,system,host,port,username,password,path,userid) VALUES ('"+name+"','"+system+"','"+host+"','"+port+"','"+username+"','"+password+"','"+path+"','"+userid+"');")
+                qry = db.query("INSERT INTO '143_pool' (name,system,host,port,username,password,path,ownerid) VALUES ('"+name+"','"+system+"','"+host+"','"+port+"','"+username+"','"+password+"','"+path+"','"+userid+"');")
 				
                 response = "<response>"
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
                 response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
+                response = response + "<id>1</id>"
                 response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
@@ -301,12 +329,12 @@ class myHandler(BaseHTTPRequestHandler):
                 action = form['action'].value
                 schedule = form['schedule'].value
                 last_run = form['last_run'].value
-                planned_time = form['planned_time'].value
                 state = form['state'].value
                 backupid = form['backupid'].value
+                backuptyp = form['backuptyp'].value
 				
                 db = dbmanager()
-                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,last_run,planned_time,state,backupid) VALUES ('"+name+"','"+action+"','"+schedule+"','"+last_run+"','"+planned_time+"','"+state+"','"+backupid+"');")
+                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,last_run,state,backupid) VALUES ('"+name+"','"+action+"','"+schedule+"','"+last_run+"','"+state+"','"+backupid+"', '"+backuptyp+"');")
 				
                 response = "<response>"
                 response = response + "<info>"
@@ -403,12 +431,12 @@ class myHandler(BaseHTTPRequestHandler):
                 action = form['action'].value
                 schedule = form['schedule'].value
                 last_run = form['last_run'].value
-                planned_time = form['planned_time'].value
                 state = form['state'].value
                 backupid = form['backupid'].value
+                backuptyp = form['backuptyp'].value
 				
                 db = dbmanager()
-                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',action='"+action+"',schedule='"+schedule+"',last_run='"+last_run+"',planned_time='"+planned_time+"',state='"+state+"',backupid='"+backupid+"' WHERE id='"+id+"';")
+                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',action='"+action+"',schedule='"+schedule+"',last_run='"+last_run+"',state='"+state+"',backupid='"+backupid+"',backuptyp='"+backuptyp+"' WHERE id='"+id+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
@@ -438,7 +466,7 @@ class myHandler(BaseHTTPRequestHandler):
 				
                 db = dbmanager()
                 
-                qry = db.query("SELECT COUNT(*) FROM '143_backups' WHERE pool_src = '" + id + "' AND ownerid='" + userid + "' OR pool_dst = '" + id + "' AND ownerid='" + userid + "';")
+                qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid = '" + userid + "' AND id = '" + id +"';")
                 usercheck = qry.fetchone()
 				
                 if(usercheck[0] == 1):

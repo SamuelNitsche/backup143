@@ -169,6 +169,56 @@ class Pool {
 			}
 		});
 	}
+    
+    create_pool(id){
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+		
+		var self = this;
+		
+		var name = $('#pool_name').val();
+		var system = $('#pool_system').val();
+		var host = $('#pool_host').val();
+		var port = $('#pool_port').val();
+		var username = $('#pool_username').val();
+		var password = $('#pool_password').val();
+		var path = $('#pool_path').val();
+		
+		$.ajax({
+			type: "post",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/createpool",
+			dataType: "xml",
+			async: false,
+			data: { "id": id, "name": name, "system": system, "host": host, "port": port, "username": username, "password": password, "path": path },
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					showpopup("Success", "Successfully created Pool!");
+					$('#js_poollist').html(self.get_pools());
+				} else {
+					var error = $(data).find('message').text()
+					showpopup("ERROR", error);
+				}
+			}
+		});
+	}
+    
+    createpopup(){
+        var html = "<table style='width:100%;'>";
+		html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='pool_name'/></td></tr>";
+		html = html + "<tr><td><label>File System: </label></td><td><input type='text' id='pool_system'/></td></tr>";
+		html = html + "<tr><td><label>Host: </label></td><td><input type='text' id='pool_host'/></td></tr>";
+		html = html + "<tr><td><label>Port: </label></td><td><input type='text' id='pool_port'/></td></tr>";
+		html = html + "<tr><td><label>Username: </label></td><td><input type='text' id='pool_username'/></td></tr>";
+		html = html + "<tr><td><label>Password: </label></td><td><input type='text' id='pool_password'/></td></tr>";
+		html = html + "<tr><td><label>Path: </label></td><td><input type='text' id='pool_path'/></td></tr>";
+		html = html + "<tr><td><button onclick='var pool = new Pool(); pool.create_pool();'>Create</button></td></tr>";
+		html = html + "</table>";
+        showpopup("Create Pool", html);
+    }
 	
 }
 

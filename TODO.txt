@@ -15,10 +15,10 @@
 [] Website aufbau dauert mir zu lange (Vermutlich im zusammenhang mit den JS Funktionen. Bei einer API Abfrage macht JS 2 Abfragen. Die erste wird benötigt um den Header X-APIPORT zu holen. Gibt es eine andere Möglichkeit (zb. in web/js/tasks.js => get_runningtasks()))
 [] Sessions auch in der Datenbank abspeichern ? (Admin könnte user rauswerfen etc)
 [] Im Webinterfaces beim bearbeiten poolid mit dem Pool Namen ersetzen und dropdown als auswahl
-[] Welche Kompressionsarten wollen wir einführen? (GZIP, ...)
+[RUNNING] Welche Compressionsarten wollen wir einführen? (GZIP, ...)
 [] Welche Verschlüsselung wollen wir verwenden ? (Vorschlag: Einfach OpenSSL (https://stackoverflow.com/questions/16056135/how-to-use-openssl-to-encrypt-decrypt-files))
 [] Überlegen: Wenn ein Backup Komprimiert (ZIP) ist: Wie vergleichen mit den aktuellen Daten (hash, binary) ? Zuerst alles Entpacken und vergleichen oder kann man die Funktionen direkt im Zip irgendwie starten ? Stimmen die Hashes etc. dann (Komprimierte Datei vs Originale Datei ja eigentlich nicht)?
-[] Backup Logik (bin/both/backup.py)
+[RUNNING] Backup Logik (bin/both/backup.py)
 [] CIFS FileSystem integrieren (bin/both/fs_cifs.py)
 [] FTP FileSystem integrieren (bin/both/fs_ftp.py)
 [] Local FileSystem integrieren (bin/both/fs_local.py)
@@ -27,14 +27,14 @@
 [] SMB FileSystem integrieren (bin/both/fs_smb.py)
 Alle FileSystems sollten immer dieselbe Logik / denselben Aufbau haben (connenct(), get_tree(), get_hash()) usw. In backup.py dann je nach ausgewähltem 'system' von der DB das richtige File importieren import bin.both.fs_xy as source // source.connect() usw.
 [] Script wie ein Service starten (start/stop/restart/status) mit Lock File etc. Script soll dann im Hintergrund laufen ohne direkten output.
-[] Wie soll die Logik hinter incremental, Full etc. aussehen ? Extratask für Full und Incremental ? Soll das das Skript selbst überprüfen / wann war das letzte Full Backup ? Vermutlich benötigen wir noch eine extra Spalte in 143_backup (da habe ich bisher nicht daran gedacht)
+[X] Wie soll die Logik hinter incremental, Full etc. aussehen ? Extratask für Full und Incremental ? Soll das das Skript selbst überprüfen / wann war das letzte Full Backup ? Vermutlich benötigen wir noch eine extra Spalte in 143_backup (da habe ich bisher nicht daran gedacht)
 [] Restore Skript (bin/both/restore.py)
 [] Webserver: Sessions verschlüsseln (OpenSSL ?)
 [] Webinterface: Backup Manuell starten
 [] Webinterface: Pools zugriff test Funktion (zum testen ob beispielsweise FTP Zugangsdaten stimmen etc.)
 [] Speedanzeige / Etwaige Zeitdauer bei laufenden Tasks
 [] Restore: Möglichkeit einzelne Dateien oder ganzes Backup zurückzuspielen
-[] Webinterface: Möglichkeit vergangene Logs anzuzeigen
+[RUNNING] Webinterface: Möglichkeit vergangene Logs anzuzeigen
 [] Prozesse: Möglichkeit laufendes Backup zu stoppen / (Pausieren?)
 [] Virencheck mit VirusTotal API (Gibt laut Auftrag extrapunkte).  (Bulk beispiel da API auf 4 Anfragen / min begränzt: https://github.com/botherder/virustotal/blob/master/vt.py)
 [] Virencheck als option bei Backups hinzufügen (DB + Webinterface)
