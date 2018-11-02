@@ -7,6 +7,7 @@ db = dbmanager(True)
 threshold = 10
 
 def startBackup(task):
+    db.log(task, '=============STARTING=============')
     updateTaskState(task, 'running')
 
 def finishBackup(task):
@@ -40,7 +41,7 @@ while True:
 
     tasks = query.fetchall()
     for task in tasks:
-
+        print(task['id'])
         # Import correct script for filesystem
         if task['source_fs'] == 'ftp':
             from bin.both.fs_ftp import Backup
@@ -54,6 +55,7 @@ while True:
                 schedule = CronTab(task['schedule'])
                 diff = schedule.next()
                 if diff < threshold:
+                    print('Starting normal for task ' + str(task['id']))
                     startBackup(task['id'])
                     backup = Backup(task)
                     backup.backup()
@@ -62,6 +64,7 @@ while True:
 
             # Start backup immediately if never ran before
             else:
+                print('Starting immediately for task ' + str(task['id']))
                 startBackup(task['id'])
                 backup = Backup(task)
                 backup.backup()
