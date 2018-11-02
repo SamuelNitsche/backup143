@@ -1,5 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Exo:100,200,400);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
+@import url(https://fonts.googleapis.com/css?family=Nunito:400,600);
 
 *{
 	margin:0;
@@ -11,15 +12,16 @@ body{
 	padding: 0;
 	background: #fff;
 
-	color: #fff;
-	font-family: Arial;
-	font-size: 12px;
+	color: #3d4852;
+	font-family: 'Nunito', sans-serif;
+	/*font-size: 12px;*/
 }
 
 #wrapper{
-    height:100%;
+    min-height:100%;
 	width:100%;
 	background-color:#F0F0F0;
+	padding: 0 0 50px 0;
 }
 
 .background {
@@ -35,18 +37,6 @@ body{
 	top: calc(50% - 35px);
 	left: calc(50% - 255px);
 	z-index: 2;
-}
-
-#title div{
-	float: left;
-	color: #fff;
-	font-family: 'Exo', sans-serif;
-	font-size: 35px;
-	font-weight: 200;
-}
-
-#title div span{
-	color: #9BB2FF !important;
 }
 
 .login{
@@ -66,9 +56,9 @@ body{
 	border: 1px solid rgba(255,255,255,0.6);
 	border-radius: 2px;
 	color: #fff;
-	font-family: 'Exo', sans-serif;
+	/*font-family: 'Exo', sans-serif;*/
 	font-size: 16px;
-	font-weight: 400;
+	/*font-weight: 400;*/
 	padding: 4px;
 }
 
@@ -79,9 +69,9 @@ body{
 	border: 1px solid rgba(255,255,255,0.6);
 	border-radius: 2px;
 	color: #fff;
-	font-family: 'Exo', sans-serif;
+	/*font-family: 'Exo', sans-serif;*/
 	font-size: 16px;
-	font-weight: 400;
+	/*font-weight: 400;*/
 	padding: 4px;
 	margin-top: 10px;
 }
@@ -96,7 +86,7 @@ body{
 	color: #a18d6c;
 	font-family: 'Exo', sans-serif;
 	font-size: 16px;
-	font-weight: 400;
+	/*font-weight: 400;*/
 	padding: 6px;
 	margin-top: 10px;
 }
@@ -152,10 +142,15 @@ body{
 #navigation #title {
 	width:200px;
 	height:70px;
-	font-size:50px;
+	font-size:1.3rem;
 	line-height:70px;
 	padding-left:20px;
 	padding-right:20px;
+	color: #ffffff;
+}
+
+#navigation #title span {
+	color: #9BB2FF !important;
 }
 
 #navigation #links {
@@ -163,7 +158,7 @@ body{
 	flex-direction: row;
 	width:1000px;
 	height:70px;
-	font-size:30px;
+	font-size:1.2rem;
 	line-height:70px;
 }
 
@@ -171,8 +166,8 @@ body{
 	display: flex;
 	flex-direction: row;
 	color: #fff;
-	font-family: 'Exo', sans-serif;
-	font-weight: 200;
+	/*font-family: 'Exo', sans-serif;*/
+	/*font-weight: 200;*/
 }
 
 #navigation #links ul li {
@@ -200,7 +195,7 @@ body{
 }
 
 #tasks-wrap {
-  position:absolute;
+  position:fixed;
   bottom:0;
   width: 100%;
   padding-bottom:0;
@@ -208,12 +203,12 @@ body{
 }
 
 #tasks-click {
-	font-family: 'Exo', sans-serif;
+	/*font-family: 'Exo', sans-serif;*/
 	background: #313139;
 	color: #fff;
 	cursor: pointer;
 	font-size: 22px;
-	font-weight: 200;
+	/*font-weight: 200;*/
 	margin: 0px 0 0 85%;
 	padding: 4px 11px;
     text-decoration: none;
@@ -280,6 +275,12 @@ body{
 	background-color: #fff;
 	z-index: 950;
 	color:#000;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: 0 4px 8px 0 rgba(0,0,0,.12), 0 2px 4px 0 rgba(0,0,0,.08);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.12), 0 2px 4px 0 rgba(0,0,0,.08);
+	padding: 10px;
 }
 
 #popup-content h2 {
@@ -293,8 +294,8 @@ body{
 
 #popup-content label {
 	color: #000;
-	font-weight: bold;
-	font-family: 'Exo', sans-serif;
+	/*font-weight: bold;*/
+	/*font-family: 'Exo', sans-serif;*/
 	font-size:18px;
 }
 
@@ -305,9 +306,9 @@ body{
 	border: 1px solid #000;
 	border-radius: 2px;
 	color: #000;
-	font-family: 'Exo', sans-serif;
+	/*font-family: 'Exo', sans-serif;*/
 	font-size: 16px;
-	font-weight: 400;
+	/*font-weight: 400;*/
 	padding: 4px;
 	margin-top: 10px;
 }
@@ -343,7 +344,7 @@ body{
 }
 
 .countpart span {
-	font-weight:bold;
+	/*font-weight:bold;*/
 	font-size:20px;
 }
 
@@ -381,7 +382,49 @@ body{
 
 .jslist table {
 	padding-top:20px;
-	color:#000;
 	width:100%;
 	text-align:center;
+	border-collapse: collapse;
+}
+
+.jslist table th {
+	border-bottom: 2px solid #3A3A42;
+}
+
+.jslist table td {
+	padding: 5px 0px;
+	cursor: pointer;
+}
+
+.jslist table tbody tr:hover {
+	background: rgba(0,0,0,.1);
+}
+
+.addbtn {
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+button {
+	padding-left: 1rem;
+    padding-right: 1rem;
+	padding-top: .5rem;
+    padding-bottom: .5rem;
+	cursor: pointer;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 1rem;
+	border: none;
+	box-shadow: none;
+}
+
+button.default {
+	background: #3490dc;
+	color: white;
+}
+
+button.danger {
+	background: #c53c36;
+	color: white;
 }
