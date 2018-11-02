@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 
 db = dbmanager()
+threshold = 10
 
 while True:
     query = db.query('SELECT c.path, d.path, a.schedule, a.id, a.last_run FROM \'143_tasks\' AS a '
@@ -14,16 +15,24 @@ while True:
 
     tasks = query.fetchall()
     for task in tasks:
-        print(task[4])
-        last_run = datetime.strftime(task[4], '%Y-%m-%y %H:%M:%S')
-        print(last_run)
-        # schedule = CronTab(task[2])
-        # diff = schedule.next()
-        # if diff < 0:
-        #     backup = Backup(task[0], task[1])
-        #     backup.backup()
-        #     print('Backup for task ' + task[3] + ' created')
+        src = task[0]
+        dst = task[1]
+        schedule = task[2]
+        task_id = task[3]
+        last_run = task[4]
 
-    print('Backups created')
+        if not last_run == None:
+            schedule = CronTab(schedule)
+            diff = schedule.next()
+            if diff < threshold:
+                backup = Backup(src, dst, task_id)
+                backup.backup()
+                print('Backup for task ' + str(task_id) + ' created')
+        else:
+            backup = Backup(src, dst, task_id)
+            backup.backup()
+            print('Backup for task ' + str(task_id) + ' created')
 
-    time.sleep(1)
+    # print('Backups created')
+
+    time.sleep(10)
