@@ -24,7 +24,7 @@ class Backup {
 					var b_backups = $(data).find('amount').text();
 					if( b_backups > 0){
 						b_html = b_html + "<table>";
-						b_html = b_html + "<tr><th>Source</th><th>Destination</th><th>Compare</th><th>Encryption</th><th>Compression</th></tr>";
+						b_html = b_html + "<thead><tr><th>Source</th><th>Destination</th><th>Compare</th><th>Encryption</th><th>Compression</th></tr></thead>";
 						$(data).find('backup').each(function(){
 							var b_id = $(this).find('id').text();
 							var b_pool_src = $(this).find('pool_src').text();
@@ -106,7 +106,7 @@ class Backup {
 		html = html + "<tr><td><label>Compare: </label></td><td><input type='text' id='backup_compare' value='"+backupinfo[3]+"'/></td></tr>";
 		html = html + "<tr><td><label>Encrypt: </label></td><td><input type='text' id='backup_encrypt' value='"+backupinfo[4]+"'/></td></tr>";
 		html = html + "<tr><td><label>Compression: </label></td><td><input type='text' id='backup_compression' value='"+backupinfo[5]+"'/></td></tr>";
-		html = html + "<tr><td><button onclick='var backup = new Backup(); backup.delete_backup(\""+String(id)+"\");'>Delete</button></td><td><button onclick='var backup = new Backup(); backup.update_backup(\""+String(id)+"\");'>Update</button></td></tr>";
+		html = html + "<tr><td><button class='danger' onclick='var backup = new Backup(); backup.delete_backup(\""+String(id)+"\");'>Delete</button></td><td><button class='default' onclick='var backup = new Backup(); backup.update_backup(\""+String(id)+"\");'>Update</button></td></tr>";
 		html = html + "</table>";
         showpopup("Settings", html);
 	}
@@ -214,7 +214,7 @@ class Backup {
 		html = html + "<tr><td><label>Compare: </label></td><td><input type='text' id='backup_compare'/></td></tr>";
 		html = html + "<tr><td><label>Encrypt: </label></td><td><input type='text' id='backup_encrypt'/></td></tr>";
 		html = html + "<tr><td><label>Compression: </label></td><td><input type='text' id='backup_compression'/></td></tr>";
-        html = html + "<tr><td><button onclick='var backup = new Backup(); backup.create_backup();'>Create</button></td></tr>";
+        html = html + "<tr><td><button class='default' onclick='var backup = new Backup(); backup.create_backup();'>Create</button></td></tr>";
         showpopup("Create Backup", html);
     }
 	

@@ -24,7 +24,7 @@ class Pool {
 					var p_pools = $(data).find('amount').text();
 					if( p_pools > 0){
 						p_html = p_html + "<table>";
-						p_html = p_html + "<tr><th>Name</th><th>FileSystem</th><th>Host</th></tr>";
+						p_html = p_html + "<thead><tr><th>Name</th><th>FileSystem</th><th>Host</th></tr></thead>";
 						$(data).find('pool').each(function(){
 							var p_id = $(this).find('id').text();
 							var p_name = $(this).find('name').text();
@@ -101,7 +101,7 @@ class Pool {
 		html = html + "<tr><td><label>Username: </label></td><td><input type='text' id='pool_username' value='"+poolinfo[5]+"'/></td></tr>";
 		html = html + "<tr><td><label>Password: </label></td><td><input type='text' id='pool_password' value='"+poolinfo[6]+"'/></td></tr>";
 		html = html + "<tr><td><label>Path: </label></td><td><input type='text' id='pool_path' value='"+poolinfo[7]+"'/></td></tr>";
-		html = html + "<tr><td><button onclick='var pool = new Pool(); pool.delete_pool(\""+String(id)+"\");'>Delete</button></td><td><button onclick='var pool = new Pool(); pool.update_pool(\""+String(id)+"\");'>Update</button></td></tr>";
+		html = html + "<tr><td><button class='danger' onclick='var pool = new Pool(); pool.delete_pool(\""+String(id)+"\");'>Delete</button></td><td><button class='default' onclick='var pool = new Pool(); pool.update_pool(\""+String(id)+"\");'>Update</button></td></tr>";
 		html = html + "</table>";
         showpopup("Settings: "+poolinfo[1], html);
 	}
@@ -215,7 +215,7 @@ class Pool {
 		html = html + "<tr><td><label>Username: </label></td><td><input type='text' id='pool_username'/></td></tr>";
 		html = html + "<tr><td><label>Password: </label></td><td><input type='text' id='pool_password'/></td></tr>";
 		html = html + "<tr><td><label>Path: </label></td><td><input type='text' id='pool_path'/></td></tr>";
-		html = html + "<tr><td><button onclick='var pool = new Pool(); pool.create_pool();'>Create</button></td></tr>";
+		html = html + "<tr><td><button class='default' onclick='var pool = new Pool(); pool.create_pool();'>Create</button></td></tr>";
 		html = html + "</table>";
         showpopup("Create Pool", html);
     }
