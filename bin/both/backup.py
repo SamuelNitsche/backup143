@@ -16,7 +16,7 @@ def finishBackup(task):
     updateTaskState(task, 'waiting')
 
 def updateLastRunDate(task):
-    date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    date = str(datetime.now())
     db.query('UPDATE \'143_tasks\' SET \'last_run\' = \''+date+'\' WHERE id = '+str(task))
 
 def updateTaskState(task, state):
@@ -33,7 +33,9 @@ while True:
                      'c.host AS host, '
                      'c.username AS user, '
                      'c.password AS password, '
-                     'a.state '
+                     'a.state, '
+                     'b.compression, '
+                     'a.backuptyp as type '
                      'FROM \'143_tasks\' AS a '
                      'JOIN \'143_backups\' AS b ON a.backupid = b.id '
                      'JOIN \'143_pool\' AS c ON b.pool_src = c.id '
@@ -41,7 +43,6 @@ while True:
 
     tasks = query.fetchall()
     for task in tasks:
-        print(task['id'])
         # Import correct script for filesystem
         if task['source_fs'] == 'ftp':
             from bin.both.fs_ftp import Backup
