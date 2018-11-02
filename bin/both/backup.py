@@ -16,7 +16,7 @@ def finishBackup(task):
     updateTaskState(task, 'waiting')
 
 def updateLastRunDate(task):
-    date = str(datetime.now())
+    date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     db.query('UPDATE \'143_tasks\' SET \'last_run\' = \''+date+'\' WHERE id = '+str(task))
 
 def updateTaskState(task, state):

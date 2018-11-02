@@ -20,7 +20,7 @@ class Backup:
             if not os.path.isdir(self.task['dest']):
                 raise Exception('Destination directory does not exist')
 
-            destination = self.task['dest'] + os.sep + str(datetime.now()) + '.zip'
+            destination = self.task['dest'] + os.sep + str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S')) + '.zip'
             path = tempfile.mkdtemp()
             self.conn.get_r('.', path)
             os.chdir(path)
@@ -41,7 +41,7 @@ class Backup:
             if not os.path.isdir(self.task['dest']):
                 raise Exception('Destination directory does not exist')
 
-            destination = self.task['dest'] + os.sep + str(datetime.now())
+            destination = self.task['dest'] + os.sep + str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
             os.mkdir(destination)
             path = tempfile.mkdtemp()
             self.conn.get_r('.', path)

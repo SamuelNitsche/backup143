@@ -3,6 +3,7 @@ import zipfile
 import shutil
 from bin.both.dbcon import dbmanager
 from datetime import datetime
+from bin.both.compare import file_changed
 
 
 class Backup:
@@ -16,7 +17,14 @@ class Backup:
             if not os.path.isdir(self.task['dest']):
                 raise Exception('Destination directory does not exist')
 
-            destination = self.task['dest'] + os.sep + str(datetime.now()) + '.zip'
+            oldpath = os.path.join(self.task['dest'], str(self.task['last_run']).replace('_', ' ').replace('-', ':'))
+            print(oldpath)
+            if os.path.exists(oldpath):
+                print('Old backup exists')
+            else:
+                print('Old backup does not exist')
+
+            destination = self.task['dest'] + os.sep + str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S')) + '.zip'
             zipf = zipfile.ZipFile(destination, "w")
             for subdir, dirs, files in os.walk("."):
                 for dir in dirs:
@@ -25,6 +33,7 @@ class Backup:
                     zipf.write(path)
 
                 for file in files:
+                    # if file_changed(oldfile, file):
                     self.db.log(self.task['id'], "Created backup of file " + file)
                     zipf.write(os.path.join(subdir, file))
 
@@ -32,7 +41,7 @@ class Backup:
             if not os.path.isdir(self.task['dest']):
                 raise Exception('Destination directory does not exist!')
 
-            destination = self.task['dest'] + os.sep + str(datetime.now())
+            destination = self.task['dest'] + os.sep + str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
             os.mkdir(destination)
             for subdir, dirs, files in os.walk("."):
                 for dir in dirs:
