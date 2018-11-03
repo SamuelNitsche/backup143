@@ -18,6 +18,13 @@ def finishbackup(task):
     updatetaskstate(task, 'waiting')
 
 
+def backupfailed(task, err):
+    db.log(task, '=============FAILED=============')
+    db.log(task, err)
+    updatetaskstate(task, 'failed')
+    updatelastrundate(task)
+
+
 def updatelastrundate(task):
     date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     db.query('UPDATE \'143_tasks\' SET \'last_run\' = \'' + date + '\' WHERE id = ' + str(task))
@@ -75,7 +82,7 @@ while True:
                         finishbackup(task['id'])
                         print('Backup for task ' + str(task['id']) + ' created')
                     except Exception as e:
-                        updatetaskstate(task['id'], 'failed')
+                        backupfailed(task['id'], e)
                         print('Backup failed')
                         print(e)
 
@@ -91,7 +98,7 @@ while True:
                     finishbackup(task['id'])
                     print('Backup for task ' + str(task['id']) + ' created')
                 except Exception as e:
-                    updatetaskstate(task['id'], 'failed')
+                    backupfailed(task['id'], e)
                     print('Backup failed')
                     print(e)
         else:
