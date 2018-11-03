@@ -6,23 +6,29 @@ import time
 db = dbmanager(True)
 threshold = 10
 
-def startBackup(task):
+
+def startbackup(task):
     db.log(task, '=============STARTING=============')
-    updateTaskState(task, 'running')
+    updatetaskstate(task, 'running')
 
-def finishBackup(task):
+
+def finishbackup(task):
     db.log(task, '=============FINIHSED=============')
-    updateLastRunDate(task)
-    updateTaskState(task, 'waiting')
+    updatelastrundate(task)
+    updatetaskstate(task, 'waiting')
 
-def updateLastRunDate(task):
+
+def updatelastrundate(task):
     date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    db.query('UPDATE \'143_tasks\' SET \'last_run\' = \''+date+'\' WHERE id = '+str(task))
+    db.query('UPDATE \'143_tasks\' SET \'last_run\' = \'' + date + '\' WHERE id = ' + str(task))
 
-def updateTaskState(task, state):
-    db.query('UPDATE \'143_tasks\' SET \'state\' = \''+state+'\' WHERE id = '+str(task))
+
+def updatetaskstate(task, state):
+    db.query('UPDATE \'143_tasks\' SET \'state\' = \'' + state + '\' WHERE id = ' + str(task))
+
 
 while True:
+    # Fetch all tasks from database
     query = db.query('SELECT c.path AS source, '
                      'd.path AS dest, '
                      'a.schedule, '
@@ -51,25 +57,32 @@ while True:
         else:
             from bin.both.fs_local import Backup
 
+        # Check if task is running
         if task['state'] is not 'running':
+            # Calculate start date from last run
             if task['last_run'] is not None:
                 schedule = CronTab(task['schedule'])
                 diff = schedule.next()
+                # Start backup if cron matches
                 if diff < threshold:
                     print('Starting normal for task ' + str(task['id']))
-                    startBackup(task['id'])
+                    startbackup(task['id'])
+                    # Initialize backup task
                     backup = Backup(task)
+                    # Start backup
                     backup.backup()
-                    finishBackup(task['id'])
+                    finishbackup(task['id'])
                     print('Backup for task ' + str(task['id']) + ' created')
 
             # Start backup immediately if never ran before
             else:
                 print('Starting immediately for task ' + str(task['id']))
-                startBackup(task['id'])
+                startbackup(task['id'])
+                # Initialize backup task
                 backup = Backup(task)
+                # Start backup
                 backup.backup()
-                finishBackup(task['id'])
+                finishbackup(task['id'])
                 print('Backup for task ' + str(task['id']) + ' created')
         else:
             print('Backup already running')

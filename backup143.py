@@ -6,20 +6,23 @@ import __main__
 import threading
 
 from bin.both.dbcon import dbmanager
+
 db = dbmanager()
 db.create()
 
 from bin.both.log import LogginSystem
+
 log = LogginSystem('service')
 log.write('Detected Python version: ' + sys.version)
-	
+
 threads = []
-	
+
 if _platform == "win32" or _platform == "win64":
     log = LogginSystem('service')
     log.write('Detected OS: Windows')
     try:
         from bin.both.process import process
+
         p = process()
         t = threading.Thread(target=p.start)
         threads.append(t)
@@ -32,6 +35,7 @@ elif _platform == "linux" or _platform == "linux2" or _platform == "darwin":
     log.write('Detected OS: Linux')
     try:
         from bin.both.process import process
+
         p = process()
         t = threading.Thread(target=p.start)
         threads.append(t)
