@@ -13,6 +13,9 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from bin.both.config import config_var
 from pathlib import Path
+import random
+from bin.both.sendmail import mail
+from bin.both.dbconfig import dbconf
 
 PORT_NUMBER = config_var('WEB', 'PORT')
 API_PORT_NUMBER = config_var('API', 'PORT')
@@ -118,6 +121,9 @@ class myHandler(BaseHTTPRequestHandler):
             qry = db.query("SELECT id, username, password FROM '143_users' WHERE username='" + str(form['username'].value) + "' AND password='" + passwordhash + "';")
             result = qry.fetchone()
             if result != None:
+                date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                db = dbmanager()
+                qry = db.query("UPDATE '143_users' SET last_login='"+ str(date) +"' WHERE id='" + str(result[0]) + "';")
                 self.send_response(301)
                 self.create_session('userid', result[0], 86400)
                 self.create_session('username', result[1], 86400)
@@ -134,12 +140,121 @@ class myHandler(BaseHTTPRequestHandler):
                 headers=self.headers,
                 environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
 
-            print("Your name is: %s" % form["your_name"].value)
-            self.send_response(200)
-            self.send_header('X-APIPORT',API_PORT_NUMBER)
-            self.end_headers()
-            self.wfile.write(bytes("Thanks %s !" % form["your_name"].value, 'utf8'))
-            return  
+            username = form['username'].value
+            
+            code = random.randint(100000, 1000000)
+            date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            db = dbmanager()
+            qry = db.query("SELECT COUNT(*) FROM '143_users' WHERE username='" + str(username) + "' OR email = '" + str(username) + "';")
+            result = qry.fetchone()
+            if result[0] > 0:
+                qry = db.query("SELECT id,email FROM '143_users' WHERE username='" + str(username) + "' OR email = '" + str(username) + "';")
+                result = qry.fetchone()
+                db.query("INSERT INTO '143_pwreset' (userid, authcode, req_date) VALUES ('" + str(result[0]) + "','" + str(code) + "','" + str(date) + "');")
+                mail(str(result[1]), "Password Reset", "Your Reset Code is: "+ str(code))
+                self.send_response(301)
+                self.send_header('Location','forgot_password_auth.html')
+                self.create_session('reset_userid', str(result[0]), 1200)
+                self.end_headers()
+                return  
+            else:
+                self.send_response(301)
+                db.query("DELETE FROM '143_pwreset' WHERE userid='" + self.get_session('reset_userid') + "';")
+                self.remove_session('reset_userid')
+                self.remove_session('reset_auth')
+                self.send_header('Location','index.html')
+                self.end_headers()
+        elif self.path=="/forgottenauth":
+            form = cgi.FieldStorage(
+                fp=self.rfile, 
+                headers=self.headers,
+                environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
+
+            if self.get_session('reset_userid') != False:
+                code = form['code'].value
+                
+                db = dbmanager()
+                qry = db.query("SELECT COUNT(*) FROM '143_pwreset' WHERE userid = '" + self.get_session('reset_userid') + "' AND authcode = '" + str(code) + "';")
+                result = qry.fetchone()
+                if result[0] > 0:
+                    qry = db.query("SELECT req_date FROM '143_pwreset' WHERE userid = '" + self.get_session('reset_userid') + "' AND authcode = '" + str(code) + "';")
+                    result = qry.fetchone()
+                    crdatetime = datetime.strptime(result[0], '%Y-%m-%d %H:%M:%S')
+                    timebetween = datetime.now() - crdatetime
+                    if timebetween.seconds < 1200:
+                        self.send_response(301)
+                        self.send_header('Location','forgot_password_set.html')
+                        self.create_session('reset_auth', "True", 1200)
+                        self.end_headers()
+                        return 
+                    else:
+                        print("REQUEST TOO OLD!")
+                        self.send_response(301)
+                        db.query("DELETE FROM '143_pwreset' WHERE userid='" + self.get_session('reset_userid') + "';")
+                        self.remove_session('reset_userid')
+                        self.remove_session('reset_auth')
+                        self.send_header('Location','index.html')
+                        self.end_headers()
+                else:
+                    self.send_response(301)
+                    db.query("DELETE FROM '143_pwreset' WHERE userid='" + self.get_session('reset_userid') + "';")
+                    self.remove_session('reset_userid')
+                    self.remove_session('reset_auth')
+                    self.send_header('Location','index.html')
+                    self.end_headers()
+            else:
+                self.send_response(301)
+                db.query("DELETE FROM '143_pwreset' WHERE userid='" + self.get_session('reset_userid') + "';")
+                self.remove_session('reset_userid')
+                self.remove_session('reset_auth')
+                self.send_header('Location','index.html')
+                self.end_headers()
+        elif self.path=="/forgottenset":
+            form = cgi.FieldStorage(
+                fp=self.rfile, 
+                headers=self.headers,
+                environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
+
+            if self.get_session('reset_userid') != False:
+                if self.get_session('reset_auth') != False:
+                    db = dbmanager()
+                    qry = db.query("SELECT req_date FROM '143_pwreset' WHERE userid = '" + self.get_session('reset_userid') + "';")
+                    result = qry.fetchone()
+                    crdatetime = datetime.strptime(result[0], '%Y-%m-%d %H:%M:%S')
+                    timebetween = datetime.now() - crdatetime
+                    if timebetween.seconds < 1200:
+                        password = form['password'].value
+                        passwordhash = hashlib.sha512(str(password).encode('utf8')).hexdigest()
+                        db = dbmanager()
+                        db.query("UPDATE '143_users' SET password = '" + passwordhash + "' WHERE id = '" + self.get_session('reset_userid') + "';")
+                        db.query("DELETE FROM '143_pwreset' WHERE userid='" + self.get_session('reset_userid') + "';")
+                        self.send_response(301)
+                        self.remove_session('reset_userid')
+                        self.remove_session('reset_auth')
+                        self.send_header('Location','index.html')
+                        self.end_headers()
+                    else:
+                        print("REQUEST TOO OLD!")
+                        self.send_response(301)
+                        db.query("DELETE FROM '143_pwreset' WHERE userid='" + self.get_session('reset_userid') + "';")
+                        self.remove_session('reset_userid')
+                        self.remove_session('reset_auth')
+                        self.send_header('Location','index.html')
+                        self.end_headers()
+                else:
+                    self.send_response(301)
+                    db.query("DELETE FROM '143_pwreset' WHERE userid='" + self.get_session('reset_userid') + "';")
+                    self.remove_session('reset_userid')
+                    self.remove_session('reset_auth')
+                    self.send_header('Location','index.html')
+                    self.end_headers()
+            else:
+                self.send_response(301)
+                db.query("DELETE FROM '143_pwreset' WHERE userid='" + self.get_session('reset_userid') + "';")
+                self.remove_session('reset_userid')
+                self.remove_session('reset_auth')
+                self.send_header('Location','index.html')
+                self.end_headers()
         else:
             script_dir = os.path.dirname(__file__)
             rel_path = "../../web/error_docs/404.html"

@@ -1,13 +1,21 @@
 import smtplib
 from email.mime.text import MIMEText
+from bin.both.dbconfig import dbconf
 
-msg = MIMEText(text)
+def mail(to, subject, text):
+    msg = MIMEText(text)
 
-msg['Subject'] = 'The contents of %s' % textfile
-msg['From'] = me
-msg['To'] = you
+    msg['Subject'] = subject
+    msg['From'] = dbconf('smtp_username')
+    msg['To'] = to
 
-s = smtplib.SMTP('localhost', 25)
-s.login(username, password)
-s.send_message(msg)
-s.quit()
+    if(dbconf('smtp_usessl') == 1):
+        s = smtplib.SMTP_SSL(dbconf('smtp_server'), dbconf('smtp_port'))
+    elif(dbconf('smtp_usetls') == 1):
+        s = smtplib.SMTP(dbconf('smtp_server'), dbconf('smtp_port'))
+        s.starttls()
+    else:
+        s = smtplib.SMTP(dbconf('smtp_server'), dbconf('smtp_port'))
+    s.login(dbconf('smtp_username'), dbconf('smtp_password'))
+    s.send_message(msg)
+    s.quit()

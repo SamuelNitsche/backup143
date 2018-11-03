@@ -11,26 +11,12 @@ CREATE TABLE "143_users" (
 
 INSERT INTO "143_users" (id, username, firstname, lastname, email, password, last_login, active) VALUES (1, 'admin', 'Firstname', 'Lastname', 'admin@backup143.py', 'c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec', '00-00-0000', 1);
 
-CREATE TABLE IF NOT EXISTS "143_emails" (
+CREATE TABLE IF NOT EXISTS "143_pwreset" (
 	id integer PRIMARY KEY AUTOINCREMENT,
 	userid integer,
-	email VARCHAR(255),
-	value boolean
+	authcode VARCHAR(255),
+    req_date datetime
 );
-
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'login_notify', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'pool_created', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'pool_deleted', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'pool_changed', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'backup_started', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'backup_successful', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'backup_failed', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'backup_changed', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'backup_trojanercheck', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'restore_started', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'restore_successful', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'restore_failed', 1);
-INSERT INTO "143_emails" (userid, email, value) VALUES (1, 'restore_changed', 1);
 
 CREATE TABLE IF NOT EXISTS "143_options" (
 	id integer PRIMARY KEY AUTOINCREMENT,
@@ -41,19 +27,9 @@ CREATE TABLE IF NOT EXISTS "143_options" (
 INSERT INTO "143_options" (option, value) VALUES ('smtp_server', 'localhost');
 INSERT INTO "143_options" (option, value) VALUES ('smtp_port', '25');
 INSERT INTO "143_options" (option, value) VALUES ('smtp_username', '');
-INSERT INTO "143_options" (option, value) VALUES ('smtp_passwort', '');
+INSERT INTO "143_options" (option, value) VALUES ('smtp_password', '');
 INSERT INTO "143_options" (option, value) VALUES ('smtp_usessl', '');
 INSERT INTO "143_options" (option, value) VALUES ('smtp_usetls', '');
-
-CREATE TABLE IF NOT EXISTS "143_log" (
-	id integer PRIMARY KEY AUTOINCREMENT,
-	date datetime,
-	type VARCHAR(255),
-	relid integer,
-	msg VARCHAR(255)
-);
-
-INSERT INTO "143_log" (date, type, relid, msg) VALUES (DATE(), 'user', 1, 'User "admin" successfully created');
 
 CREATE TABLE IF NOT EXISTS "143_tasks" (
 	id integer PRIMARY KEY AUTOINCREMENT,
@@ -91,13 +67,6 @@ CREATE TABLE IF NOT EXISTS "143_backups" (
 	compare VARCHAR(255),
 	encrypt boolean,
 	compression VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS "143_permissions" (
-	id integer PRIMARY KEY AUTOINCREMENT,
-	userid integer,
-	permission VARCHAR(255),
-	value boolean
 );
 
 INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'access_home', 1);

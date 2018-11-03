@@ -12,7 +12,6 @@ from bin.both.dbcon import dbmanager
 import http.cookies
 from bin.both.config import config_var
 from pathlib import Path
-from crontab import CronTab
 
 LISTENON = config_var('LOCAL', 'LISTEN')
 PORT_NUMBER = config_var('API', 'PORT')
@@ -45,7 +44,10 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending sysinfo!"))
-#GET POOL
+            ############################################
+            # GET INFORMATIONS (Pool, Backup, Task)    #
+            ############################################
+            #GET POOL
             elif self.path=="/get/pools":
                 db = dbmanager()
                 qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid = '" + self.get_session('userid') + "';")
@@ -81,6 +83,7 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending pools!"))
+            #GET POOLLIST
             elif self.path=="/get/poollist":
                 db = dbmanager()
                 qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid = '" + self.get_session('userid') + "';")
@@ -109,7 +112,7 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending poollist!"))
-#GET BACKUP
+            #GET BACKUP
             elif self.path=="/get/backups":
                 db = dbmanager()
                 qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p on b.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
@@ -142,7 +145,7 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending backups!"))
-# GET TASKS
+            # GET TASKS
             elif self.path=="/get/tasks":
                 db = dbmanager()
                 qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.state = 'running';")
@@ -220,7 +223,10 @@ class myHandler(BaseHTTPRequestHandler):
         xmlheader = '<?xml version="1.0" encoding="UTF-8"?>'
 		
         if self.get_session('userid') != False:
-# GET INFO API CALLS
+            ############################################################
+            # GET INFORMATIONS FOR SPECIFIC ID (Pool, Backup, Task)    #
+            ############################################################
+            # GET TASKLOG FOR TASK
             if self.path=="/post/tasklog":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -254,6 +260,7 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending tasklog!"))
+            # GET TASKS BY BACKUP ID
             elif self.path=="/post/backuptasks":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -293,7 +300,10 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending backuptasks!"))
-# CREATE API CALLS
+            ###########################################
+            # CREATE COMMANDS (Pool, Backup, Task)    #
+            ###########################################
+            # CREATE POOL
             elif self.path=="/post/createpool":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -343,6 +353,7 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Created Pool!"))
+            # CREATE BACKUP
             elif self.path=="/post/createbackup":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -371,6 +382,7 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Created Backup!"))
+            # CREATE TASK
             elif self.path=="/post/createtask":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -404,7 +416,10 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Created Task!"))
-# UPDATE API CALLS
+            ##########################################
+            # UPDATE COMMAND (Pool, Backup, Task)    #
+            ##########################################
+            # UPDATE POOL
             elif self.path=="/post/updatepool":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -456,6 +471,7 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Updated Pool!"))
+            # UPDATE BACKUP
             elif self.path=="/post/updatebackup":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -488,6 +504,7 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Updated Backup!"))
+            # UPDATE TASK
             elif self.path=="/post/updatetask":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -523,7 +540,10 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Updated Task!"))
-# DELETE API CALLS
+            ###########################################
+            # DELETE COMMANDS (Pool, Backup, Task)    #
+            ###########################################
+            # DELETE POOL
             elif self.path=="/post/deletepool":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -597,7 +617,7 @@ class myHandler(BaseHTTPRequestHandler):
                         self.wfile.write(bytes(xmlheader + response, 'utf8'))
                         log = logsys('api')
                         log.write(str("ERROR: Pool not found for user!"))
-						
+            # DELETE BACKUP
             elif self.path=="/post/deletebackup":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
@@ -649,7 +669,7 @@ class myHandler(BaseHTTPRequestHandler):
                     self.wfile.write(bytes(xmlheader + response, 'utf8'))
                     log = logsys('api')
                     log.write(str("ERROR: Backup not found for user!"))
-                        
+            # DELETE TASK
             elif self.path=="/post/deletetask":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 

@@ -7,6 +7,19 @@
 	padding:0;
 }
 
+#title div{
+	float: left;
+	color: #fff;
+	font-family: 'Exo', sans-serif;
+	font-size: 35px;
+	font-weight: 200;
+}
+
+#title div span{
+	color: #9BB2FF !important;
+}
+
+
 body{
 	margin: 0;
 	padding: 0;
