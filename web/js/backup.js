@@ -232,11 +232,27 @@ class Backup {
     
     createpopup(){
         var html = "<table style='width:100%;'>";
-		html = html + "<tr><td><label>Source Pool: </label></td><td><input type='text' id='backup_pool_src'/></td></tr>";
-		html = html + "<tr><td><label>Destination Pool: </label></td><td><input type='text' id='backup_pool_dst'/></td></tr>";
-		html = html + "<tr><td><label>Compare: </label></td><td><input type='text' id='backup_compare'/></td></tr>";
-		html = html + "<tr><td><label>Encrypt: </label></td><td><input type='text' id='backup_encrypt'/></td></tr>";
-		html = html + "<tr><td><label>Compression: </label></td><td><input type='text' id='backup_compression'/></td></tr>";
+		html = html + "<tr><td><label>Source Pool: </label></td><td><select id='backup_pool_src'>";
+        var pool = new Pool();
+        html = html + pool.get_pooldropdown();
+        html = html + "</select></td></tr>";
+		html = html + "<tr><td><label>Destination Pool: </label></td><td><select id='backup_pool_dst'>";
+        var pool = new Pool();
+        html = html + pool.get_pooldropdown();
+        html = html + "</select></td></tr>";
+		html = html + "<tr><td><label>Compare: </label></td><td><select id='backup_compare'>";
+        html = html + "<option value='hash'>Hash</option>";
+        html = html + "<option value='binary'>Binary</option>";
+        html = html + "</select></td></tr>";
+		html = html + "<tr><td><label>Encrypt: </label></td><td><select id='backup_encrypt'>";
+        html = html + "<option value='0'>deactivated</option>";
+        html = html + "<option value='1'>activated</option>";
+        html = html + "</select></td></tr>";
+		html = html + "<tr><td><label>Compression: </label></td><td><select id='backup_compression'>";
+        html = html + "<option value='none'>None</option>";
+        html = html + "<option value='zip'>ZIP</option>";
+        html = html + "<option value='tar'>TAR</option>";
+        html = html + "</select></td></tr>";
         html = html + "<tr><td><button class='default' onclick='var backup = new Backup(); backup.create_backup();'>Create</button></td></tr>";
         showpopup("Create Backup", html);
     }

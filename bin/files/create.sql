@@ -69,24 +69,6 @@ CREATE TABLE IF NOT EXISTS "143_backups" (
 	compression VARCHAR(255)
 );
 
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'access_home', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'access_pool', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'create_pool', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'modify_pool', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'delete_pool', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'access_backup', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'create_backup', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'modify_backup', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'delete_backup', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'access_resore', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'create_restore', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'modify_restore', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'delete_restore', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'access_settings', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'modify_settings_smtp', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'modify_settings_users', 1);
-INSERT INTO "143_permissions" (userid, permission, value) VALUES (1, 'modify_settings_permissions', 1);
-
 CREATE TABLE IF NOT EXISTS "143_tasklog" (
 	id integer PRIMARY KEY AUTOINCREMENT,
 	date datetime,

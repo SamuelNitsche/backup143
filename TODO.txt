@@ -4,19 +4,17 @@
 [X] JavaScript beim löschen eines Pools überprüfen ob dieses mit einem Backup verknüpft ist
 [X] Redirects funktionieren nichtmehr korrekt => Wenn eingeloggt direkt weiterleiten an /panel/index.html wenn nicht eingeloggt weiterleiten an index.html.
 [X] API überprüft noch nicht welcher USER die Anfrage sendet! User kann also Fremde Backups / Pools etc. Löschen!!
-[] CSS Für die Einstellungen (Backups Pools etc)
-[] Passwort vergessen beim Login
+[X] CSS Für die Einstellungen (Backups Pools etc)
+[X] Passwort vergessen beim Login
 [] Webinterface Settings um Passwort, E-Mail-Adresse zu ändern etc.
 [] Webinterface Settings für den Admin zusätzliche die werte der Tabelle 143_options.
-[] Webinterface Permissions für den Admin Account (Admin Account einfach Account mit id 1 oder muss noch eine zusätzliche Spalte mit usertype oder so erstellt werden?)
-[] Webinterface E-Mail Einstellungen für jeden Account (Welche E-Mails er erhalten möchte Siehe DB)
-[] Tasks / Queue Logik überdenken (Bisher: DB mit waiting, running, failed und dem Interval / lastrun. Tasks jeweils in einem Thread (damit mehrere gleichzeitig können))
+[X] Tasks / Queue Logik überdenken (Bisher: DB mit waiting, running, failed und dem Interval / lastrun. Tasks jeweils in einem Thread (damit mehrere gleichzeitig können))
 [] Webserver und API: Sessions nach einer gewissen Zeit löschen
 [] Website aufbau dauert mir zu lange (Vermutlich im zusammenhang mit den JS Funktionen. Bei einer API Abfrage macht JS 2 Abfragen. Die erste wird benötigt um den Header X-APIPORT zu holen. Gibt es eine andere Möglichkeit (zb. in web/js/tasks.js => get_runningtasks()))
 [] Sessions auch in der Datenbank abspeichern ? (Admin könnte user rauswerfen etc)
-[] Im Webinterfaces beim bearbeiten poolid mit dem Pool Namen ersetzen und dropdown als auswahl
-[RUNNING] Welche Compressionsarten wollen wir einführen? (GZIP, ...)
-[] Welche Verschlüsselung wollen wir verwenden ? (Vorschlag: Einfach OpenSSL (https://stackoverflow.com/questions/16056135/how-to-use-openssl-to-encrypt-decrypt-files))
+[X] Im Webinterfaces beim bearbeiten poolid mit dem Pool Namen ersetzen und dropdown als auswahl
+[RUNNING] Kompression implementrieren
+[] Verschlüsselung implementrieren
 [RUNNING] Überlegen: Wenn ein Backup Komprimiert (ZIP) ist: Wie vergleichen mit den aktuellen Daten (hash, binary) ? Zuerst alles Entpacken und vergleichen oder kann man die Funktionen direkt im Zip irgendwie starten ? Stimmen die Hashes etc. dann (Komprimierte Datei vs Originale Datei ja eigentlich nicht)?
 [RUNNING] Backup Logik (bin/both/backup.py)
 [] CIFS FileSystem integrieren (bin/both/fs_cifs.py)
@@ -42,12 +40,3 @@ Alle FileSystems sollten immer dieselbe Logik / denselben Aufbau haben (connenct
 [] Prüfen ob Skript als root / Administrator gestartet wurde (Besser wegen Dateiberechtigungen)
 [] SQL INJECTION verhinden (bin/both/dbcon.py). Korrekt wäre es wenn man die Variablen nicht direkt im SQL Befehl verwendet wie bei OOP PHP. Jedoch müsste man dann die Funktion query() umschreiben und kp wie am besten.
 [] Code vereinheiltichen. Teilweise werden returns von FUnktionen direkt verwendet, teilweise als Variable definiert und die Variable verwendet.
-
-Bezüglich der in der Liste vorhandenen Fragen: Schreib mir einfach auf WAPP oder direkt in die TODO Liste ;)
-
-Wenn du KP hast wo was ist schreib mir einfach ;)
-
-Vor dem ersten start des Skripts musst du noch ein paar Module installieren. (Bin mir nichtmehr sicher ob ich alle hab. Ansonsten solltest du es anhand der Fehlermeldung erkennen):
-pip install pywin32 (Nur für Windows Version)
-pip install daemonize
-pip install cookies

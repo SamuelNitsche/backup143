@@ -117,6 +117,7 @@ class Task {
         html = html + "</table>";
         html = html + "<table style='width:100%;'>";
 		html = html + "<tr><td><button class='danger' onclick='var task = new Task(); task.delete_backuptask(\""+String(id)+"\");'>Delete</button></td><td><button class='default' onclick='var task = new Task(); task.update_backuptask(\""+String(id)+"\");'>Update</button></td>";
+        html = html + "<tr><td><button class='default' onclick='var task = new Task(); task.get_tasklog(\""+String(id)+"\");'>Logs</button></td></tr>";
         html = html + "</table>"
         showpopup("Settings: "+taskinfo[1], html);
         $("#task_backuptyp").val(taskinfo[7]);
@@ -213,7 +214,7 @@ class Task {
 				if(apistatus == "OK"){
 					t_html = t_html + "<table>";
 					$(data).find('message').each(function(){
-						t_html = t_html + "<tr><td>" + $(this).find('datetime').text() + "</td><td>" + $(this).find('value').text() + "</td>";
+						t_html = t_html + "<tr><td>[" + $(this).find('datetime').text() + "]</td><td> " + $(this).find('value').text() + "</td>";
 					});
 					t_html = t_html + "</table>"; 
 				} else {
@@ -332,7 +333,7 @@ class Task {
 		});
 	}
     
-    createbackuppopup(type, backupid=0){
+    createbackuppopup(backupid){
         var html = "<table style='width:100%;'>";
         html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='task_name'/></td></tr>";
         html = html + "<input type='hidden' id='task_backupid' value='"+backupid+"'/>";
