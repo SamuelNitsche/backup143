@@ -12,6 +12,7 @@ from bin.both.dbcon import dbmanager
 import http.cookies
 from bin.both.config import config_var
 from pathlib import Path
+from crontab import CronTab
 
 LISTENON = config_var('LOCAL', 'LISTEN')
 PORT_NUMBER = config_var('API', 'PORT')
@@ -225,6 +226,45 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending tasklog!"))
+            elif self.path=="/post/backuptasks":
+                form = cgi.FieldStorage(
+                    fp=self.rfile, 
+                    headers=self.headers,
+                    environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
+
+                backupid = form['id'].value
+				
+                db = dbmanager()
+                response = "<response>"
+                response = response + "<info>"
+                response = response + "<status>OK</status>"
+                response = response + "</info>"
+                response = response + "<data>"
+                response = response + "<backupid>"+backupid+"</backupid>"
+                response = response + "<tasks>"
+                qry = db.query("SELECT id,name,action,schedule,last_run,state,backupid,backuptyp FROM '143_tasks' WHERE backupid='"+backupid+"' AND action='backup' ORDER BY 'id' DESC LIMIT 80;")
+                for row in qry:
+                    response = response + "<task>"
+                    response = response + "<id>"+str(row[0])+"</id>"
+                    response = response + "<name>"+str(row[1])+"</name>"
+                    response = response + "<action>"+str(row[2])+"</action>"
+                    response = response + "<schedule>"+str(row[2])+"</schedule>"
+                    response = response + "<last_run>"+str(row[2])+"</last_run>"
+                    response = response + "<state>"+str(row[2])+"</state>"
+                    response = response + "<backupid>"+str(row[2])+"</backupid>"
+                    response = response + "<backuptyp>"+str(row[2])+"</backuptyp>"
+                    response = response + "</task>"
+                response = response + "</tasks>"
+                response = response + "</data>"
+                response = response + "</response>"
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                self.send_header('Access-Control-Allow-Credentials','true')
+                self.send_header('Content-type','text/xml')
+                self.end_headers()
+                self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                log = logsys('api')
+                log.write(str("Successful: Sending backuptasks!"))
 # CREATE API CALLS
             elif self.path=="/post/createpool":
                 form = cgi.FieldStorage(
@@ -232,15 +272,8 @@ class myHandler(BaseHTTPRequestHandler):
                     headers=self.headers,
                     environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
 
-                try:
-                    name = form['name'].value
-                except KeyError:
-                    name = ""
-                    
-                try:
-                    system = form['system'].value
-                except KeyError:
-                    system=""
+                name = form['name'].value
+                system = form['system'].value
                     
                 try:
                     host = form['host'].value
@@ -261,11 +294,8 @@ class myHandler(BaseHTTPRequestHandler):
                     password = form['password'].value
                 except KeyError:
                     password = ""
-                
-                try:
-                    path = form['path'].value
-                except KeyError:
-                    path = ""
+
+                path = form['path'].value
                     
                 userid = self.get_session('userid')
 
@@ -276,9 +306,6 @@ class myHandler(BaseHTTPRequestHandler):
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>1</id>"
-                response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
                 self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
@@ -324,22 +351,22 @@ class myHandler(BaseHTTPRequestHandler):
 
                 name = form['name'].value
                 action = form['action'].value
-                schedule = form['schedule'].value
-                last_run = form['last_run'].value
-                state = form['state'].value
                 backupid = form['backupid'].value
                 backuptyp = form['backuptyp'].value
+                time = form['time'].value
+                days = form['days'].value
+                    
+                time = time.split(":")
+
+                cron = time[1] + " " + time[0] + " * * " + days
 				
                 db = dbmanager()
-                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,last_run,state,backupid) VALUES ('"+name+"','"+action+"','"+schedule+"','"+last_run+"','"+state+"','"+backupid+"', '"+backuptyp+"');")
+                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,state,backupid,backuptyp) VALUES ('"+name+"','"+action+"','"+cron+"','waiting','"+backupid+"', '"+backuptyp+"');")
 				
                 response = "<response>"
                 response = response + "<info>"
                 response = response + "<status>OK</status>"
                 response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>"+qry.lastrowid+"</id>"
-                response = response + "</data>"
                 response = response + "</response>"
                 self.send_response(200)
                 self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
@@ -425,15 +452,16 @@ class myHandler(BaseHTTPRequestHandler):
 					
                 id = form['id'].value
                 name = form['name'].value
-                action = form['action'].value
-                schedule = form['schedule'].value
-                last_run = form['last_run'].value
-                state = form['state'].value
-                backupid = form['backupid'].value
                 backuptyp = form['backuptyp'].value
+                time = form['time'].value
+                days = form['days'].value
 				
+                time = time.split(":")
+
+                cron = time[1] + " " + time[0] + " * * " + days
+                
                 db = dbmanager()
-                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',action='"+action+"',schedule='"+schedule+"',last_run='"+last_run+"',state='"+state+"',backupid='"+backupid+"',backuptyp='"+backuptyp+"' WHERE id='"+id+"';")
+                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',schedule='"+cron+"',backuptyp='"+backuptyp+"' WHERE id='"+id+"';")
 				
                 response = "<response>"
                 response = response + "<info>"
@@ -536,10 +564,10 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p on b.pool_src = p.id OR b.pool_dst = p.id WHERE p.ownerid = '" + userid + "' AND b.id='" + id + "';")
+                qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p ON b.pool_src = p.id UNION SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p ON b.pool_dst = p.id WHERE b.id = '" + id + "' AND p.ownerid = '" + userid + "';")
                 usercheck = qry.fetchone()
 				
-                if(usercheck[0] == 1):
+                if(usercheck[0] > 0):
 
                     qry = db.query("DELETE FROM '143_backups' WHERE id='"+id+"';")
                     qry = db.query("DELETE FROM '143_tasks' WHERE backupid='"+id+"';")
@@ -588,7 +616,7 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id OR bu.pool_dst = p.id WHERE p.ownerid = '" + userid + "' AND t.id = '" + id + "';")
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id UNION SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_dst = p.id WHERE p.ownerid = '" + userid + "' AND t.id = '" + id + "';")
                 usercheck = qry.fetchone()
 				
                 if(usercheck[0] == 1):

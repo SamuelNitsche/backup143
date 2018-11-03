@@ -1,7 +1,4 @@
 class Backup {
-	constructor(id) {
-		this.taskid = id;
-	}
 	
 	get_backups() {
 		var req = new XMLHttpRequest();
@@ -107,7 +104,9 @@ class Backup {
 		html = html + "<tr><td><label>Encrypt: </label></td><td><input type='text' id='backup_encrypt' value='"+backupinfo[4]+"'/></td></tr>";
 		html = html + "<tr><td><label>Compression: </label></td><td><input type='text' id='backup_compression' value='"+backupinfo[5]+"'/></td></tr>";
 		html = html + "<tr><td><button class='danger' onclick='var backup = new Backup(); backup.delete_backup(\""+String(id)+"\");'>Delete</button></td><td><button class='default' onclick='var backup = new Backup(); backup.update_backup(\""+String(id)+"\");'>Update</button></td></tr>";
-		html = html + "</table>";
+        html = html + "</table>";
+        var task = new Task();
+        html = html + task.get_taskbybackup(id);
         showpopup("Settings", html);
 	}
 	
@@ -119,6 +118,9 @@ class Backup {
 		
 		var self = this;
 		
+        alert(id);
+        
+        
 		$.ajax({
 			type: "post",
 			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/deletebackup",
@@ -173,7 +175,7 @@ class Backup {
 		});
 	}
     
-    create_backup(id){
+    create_backup(){
 		var req = new XMLHttpRequest();
 		req.open('GET', document.location, false);
 		req.send(null);
@@ -192,7 +194,7 @@ class Backup {
 			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/createbackup",
 			dataType: "xml",
 			async: false,
-			data: { "id": id, "pool_src": pool_src, "pool_dst": pool_dst, "compare": compare, "encrypt": encrypt, "compression": compression },
+			data: { "pool_src": pool_src, "pool_dst": pool_dst, "compare": compare, "encrypt": encrypt, "compression": compression },
 			xhrFields: { withCredentials:true },
 			success: function(data) {
 				var apistatus = $(data).find('status').text();

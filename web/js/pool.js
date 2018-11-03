@@ -170,7 +170,7 @@ class Pool {
 		});
 	}
     
-    create_pool(id){
+    create_pool(){
 		var req = new XMLHttpRequest();
 		req.open('GET', document.location, false);
 		req.send(null);
@@ -191,7 +191,7 @@ class Pool {
 			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/createpool",
 			dataType: "xml",
 			async: false,
-			data: { "id": id, "name": name, "system": system, "host": host, "port": port, "username": username, "password": password, "path": path },
+			data: { "name": name, "system": system, "host": host, "port": port, "username": username, "password": password, "path": path },
 			xhrFields: { withCredentials:true },
 			success: function(data) {
 				var apistatus = $(data).find('status').text();

@@ -313,6 +313,10 @@ body{
 	margin-top: 10px;
 }
 
+#popup-content input[type=checkbox]{
+    width:50px;
+}
+
 #popup-content table {
 	color:#000;
 }
