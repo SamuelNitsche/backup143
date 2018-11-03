@@ -98,16 +98,37 @@ class Backup {
 	open_backupsettings(id){
 		var backupinfo = this.get_backupinfo(id);
         var html = "<table style='width:100%;'>";
-		html = html + "<tr><td><label>Source Pool: </label></td><td><input type='text' id='backup_pool_src' value='"+backupinfo[1]+"'/></td></tr>";
-		html = html + "<tr><td><label>Destination Pool: </label></td><td><input type='text' id='backup_pool_dst' value='"+backupinfo[2]+"'/></td></tr>";
-		html = html + "<tr><td><label>Compare: </label></td><td><input type='text' id='backup_compare' value='"+backupinfo[3]+"'/></td></tr>";
-		html = html + "<tr><td><label>Encrypt: </label></td><td><input type='text' id='backup_encrypt' value='"+backupinfo[4]+"'/></td></tr>";
-		html = html + "<tr><td><label>Compression: </label></td><td><input type='text' id='backup_compression' value='"+backupinfo[5]+"'/></td></tr>";
+        html = html + "<tr><td><label>Source Pool: </label></td><td><select id='backup_pool_src'>";
+        var pool = new Pool();
+        html = html + pool.get_pooldropdown();
+        html = html + "</select></td></tr>";
+        html = html + "<tr><td><label>Destination Pool: </label></td><td><select id='backup_pool_dst'>";
+        var pool = new Pool();
+        html = html + pool.get_pooldropdown();
+        html = html + "</select></td></tr>";
+		html = html + "<tr><td><label>Compare: </label></td><td><select id='backup_compare'>";
+        html = html + "<option value='hash'>Hash</option>";
+        html = html + "<option value='binary'>Binary</option>";
+        html = html + "</select></td></tr>";
+		html = html + "<tr><td><label>Encrypt: </label></td><td><select id='backup_encrypt'>";
+        html = html + "<option value='0'>deactivated</option>";
+        html = html + "<option value='1'>activated</option>";
+        html = html + "</select></td></tr>";
+		html = html + "<tr><td><label>Compression: </label></td><td><select id='backup_compression'>";
+        html = html + "<option value='none'>None</option>";
+        html = html + "<option value='zip'>ZIP</option>";
+        html = html + "<option value='tar'>TAR</option>";
+        html = html + "</select></td></tr>";
 		html = html + "<tr><td><button class='danger' onclick='var backup = new Backup(); backup.delete_backup(\""+String(id)+"\");'>Delete</button></td><td><button class='default' onclick='var backup = new Backup(); backup.update_backup(\""+String(id)+"\");'>Update</button></td></tr>";
         html = html + "</table>";
         var task = new Task();
         html = html + task.get_taskbybackup(id);
         showpopup("Settings", html);
+        $("#backup_pool_src").val(backupinfo[1]);
+        $("#backup_pool_dst").val(backupinfo[2]);
+        $("#backup_compare").val(backupinfo[3]);
+        $("#backup_encrypt").val(backupinfo[4]);
+        $("#backup_compression").val(backupinfo[5]);
 	}
 	
 	delete_backup(id){

@@ -299,7 +299,7 @@ body{
 	font-size:18px;
 }
 
-#popup-content input {
+#popup-content input, #popup-content select {
 	width: 250px;
 	height: 30px;
 	background: transparent;

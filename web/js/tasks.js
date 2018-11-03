@@ -97,7 +97,11 @@ class Task {
 		var taskinfo = this.get_taskinfo(id);
         var html = "<table style='width:100%;'>";
 		html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='task_name' value='"+taskinfo[1]+"'/></td></tr>";
-		html = html + "<tr><td><label>Backuptyp: </label></td><td><input type='text' id='task_backuptyp' value='"+taskinfo[7]+"'/></td></tr>";
+        html = html + "<tr><td><label>Backuptyp: </label></td><td><select id='task_backuptyp'>";
+        html = html + "<option value='full'>Full</option>";
+        html = html + "<option value='incremental'>Incremental</option>";
+        html = html + "<option value='differential'>Differential</option>";
+        html = html + "</select></td></tr>";
         var schedule = taskinfo[3].split(' ');
         if(schedule[0].length < 2){
             schedule[0] = "0" + schedule[0];
@@ -111,8 +115,11 @@ class Task {
         html = html + "<tr><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th></tr>";
         html = html + "<tr><td><input type='checkbox' name='task_days' value='1'></td><td><input type='checkbox' name='task_days' value='2'></td><td><input type='checkbox' name='task_days' value='3'></td><td><input type='checkbox' name='task_days' value='4'></td><td><input type='checkbox' name='task_days' value='5'></td><td><input type='checkbox' name='task_days' value='6'></td><td><input type='checkbox' name='task_days' value='7'></td></tr>";
         html = html + "</table>";
-		html = html + "<button class='danger' onclick='var task = new Task(); task.delete_backuptask(\""+String(id)+"\");'>Delete</button><button class='default' onclick='var task = new Task(); task.update_backuptask(\""+String(id)+"\");'>Update</button>";
+        html = html + "<table style='width:100%;'>";
+		html = html + "<tr><td><button class='danger' onclick='var task = new Task(); task.delete_backuptask(\""+String(id)+"\");'>Delete</button></td><td><button class='default' onclick='var task = new Task(); task.update_backuptask(\""+String(id)+"\");'>Update</button></td>";
+        html = html + "</table>"
         showpopup("Settings: "+taskinfo[1], html);
+        $("#task_backuptyp").val(taskinfo[7]);
         var days = schedule[4].split(',');
         days.forEach(function(item){
             $(':checkbox[value='+item+']').prop('checked', true);
@@ -178,7 +185,6 @@ class Task {
 				var apistatus = $(data).find('status').text();
 				if(apistatus == "OK"){
 					showpopup("Success", "Successfully updated Task!");
-					$('#js_backuplist').html(self.get_backups());
 				} else {
 					var error = $(data).find('message').text();
 					showpopup("ERROR", error);
@@ -330,7 +336,11 @@ class Task {
         var html = "<table style='width:100%;'>";
         html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='task_name'/></td></tr>";
         html = html + "<input type='hidden' id='task_backupid' value='"+backupid+"'/>";
-        html = html + "<tr><td><label>Backuptyp: </label></td><td><input type='text' id='task_backuptyp'/></td></tr>";
+        html = html + "<tr><td><label>Backuptyp: </label></td><td><select id='task_backuptyp'>";
+        html = html + "<option value='full'>Full</option>";
+        html = html + "<option value='incremental'>Incremental</option>";
+        html = html + "<option value='differential'>Differential</option>";
+        html = html + "</select></td></tr>";
         html = html + "<tr><td><label>Time: </label></td><td><input type='time' id='task_time'/></td></tr>";
         html = html + "</table>";
         html = html + "<br/>";
@@ -340,7 +350,9 @@ class Task {
         html = html + "</table>";
         html = html + "<br/>";
         html = html + "<br/>";
-        html = html + "<button class='default' onclick='var task = new Task(); task.create_backuptask();'>Create</button>";
+        html = html + "<table style='width:100%;'>";
+        html = html + "<tr><td><button class='default' onclick='var task = new Task(); task.create_backuptask();'>Create</button></td></tr>";
+        html = html + "</table>";
         html = html + "<br/>";
         html = html + "<br/>";
         html = html + "<b>NOTE</b> For incremental and differential you should plan 1 additional Full Backup!";

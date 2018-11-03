@@ -95,7 +95,14 @@ class Pool {
 		var poolinfo = this.get_poolinfo(id);
         var html = "<table style='width:100%;'>";
 		html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='pool_name' value='"+poolinfo[1]+"'/></td></tr>";
-		html = html + "<tr><td><label>File System: </label></td><td><input type='text' id='pool_system' value='"+poolinfo[2]+"'/></td></tr>";
+		html = html + "<tr><td><label>File System: </label></td><td><select id='pool_system'>";
+        html = html + "<option value='local'>Local</option>";
+        html = html + "<option value='cifs'>CIFS</option>";
+        html = html + "<option value='ftp'>FTP</option>";
+        html = html + "<option value='sftp'>SFTP</option>";
+        html = html + "<option value='nfs'>NFS</option>";
+        html = html + "<option value='smb'>SMB</option>";
+        html = html + "</select></td></tr>";
 		html = html + "<tr><td><label>Host: </label></td><td><input type='text' id='pool_host' value='"+poolinfo[3]+"'/></td></tr>";
 		html = html + "<tr><td><label>Port: </label></td><td><input type='text' id='pool_port' value='"+poolinfo[4]+"'/></td></tr>";
 		html = html + "<tr><td><label>Username: </label></td><td><input type='text' id='pool_username' value='"+poolinfo[5]+"'/></td></tr>";
@@ -104,6 +111,7 @@ class Pool {
 		html = html + "<tr><td><button class='danger' onclick='var pool = new Pool(); pool.delete_pool(\""+String(id)+"\");'>Delete</button></td><td><button class='default' onclick='var pool = new Pool(); pool.update_pool(\""+String(id)+"\");'>Update</button></td></tr>";
 		html = html + "</table>";
         showpopup("Settings: "+poolinfo[1], html);
+        $("#pool_system").val(poolinfo[2])
 	}
 	
 	delete_pool(id){
@@ -209,7 +217,14 @@ class Pool {
     createpopup(){
         var html = "<table style='width:100%;'>";
 		html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='pool_name'/></td></tr>";
-		html = html + "<tr><td><label>File System: </label></td><td><input type='text' id='pool_system'/></td></tr>";
+		html = html + "<tr><td><label>File System: </label></td><td><select id='pool_system'>";
+        html = html + "<option value='local'>Local</option>";
+        html = html + "<option value='cifs'>CIFS</option>";
+        html = html + "<option value='ftp'>FTP</option>";
+        html = html + "<option value='sftp'>SFTP</option>";
+        html = html + "<option value='nfs'>NFS</option>";
+        html = html + "<option value='smb'>SMB</option>";
+        html = html + "</select></td></tr>";
 		html = html + "<tr><td><label>Host: </label></td><td><input type='text' id='pool_host'/></td></tr>";
 		html = html + "<tr><td><label>Port: </label></td><td><input type='text' id='pool_port'/></td></tr>";
 		html = html + "<tr><td><label>Username: </label></td><td><input type='text' id='pool_username'/></td></tr>";
@@ -218,6 +233,34 @@ class Pool {
 		html = html + "<tr><td><button class='default' onclick='var pool = new Pool(); pool.create_pool();'>Create</button></td></tr>";
 		html = html + "</table>";
         showpopup("Create Pool", html);
+    }
+    
+    get_pooldropdown(){
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+        
+        var p_html = "";
+		$.ajax({
+			type: "get",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/get/pools",
+			dataType: "xml",
+			async: false,
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					$(data).find('pool').each(function(){
+                        p_html = p_html + "<option value='"+$(this).find('id').text()+"'>"+$(this).find('name').text()+"</option>";
+					});
+				} else {
+					var error = $(data).find('message').text();
+					return error;
+				}
+			}
+		});
+		return p_html;
     }
 	
 }

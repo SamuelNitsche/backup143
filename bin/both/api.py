@@ -81,6 +81,34 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending pools!"))
+            elif self.path=="/get/poollist":
+                db = dbmanager()
+                qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid = '" + self.get_session('userid') + "';")
+                count_pools = qry.fetchone()
+                response = "<response>"
+                response = response + "<info>"
+                response = response + "<status>OK</status>"
+                response = response + "</info>"
+                response = response + "<data>"
+                response = response + "<amount>" + str(count_pools[0]) + "</amount>"
+                response = response + "<pools>"
+                qry = db.query("SELECT id,name FROM '143_pool' WHERE ownerid='"+ self.get_session('userid') +"';")
+                for row in qry:
+                    response = response + "<pool>"
+                    response = response + "<id>"+str(row[0])+"</id>"
+                    response = response + "<name>"+str(row[1])+"</name>"
+                    response = response + "</pool>"
+                response = response + "</pools>"
+                response = response + "</data>"
+                response = response + "</response>"
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                self.send_header('Access-Control-Allow-Credentials','true')
+                self.send_header('Content-type','text/xml')
+                self.end_headers()
+                self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                log = logsys('api')
+                log.write(str("Successful: Sending poollist!"))
 #GET BACKUP
             elif self.path=="/get/backups":
                 db = dbmanager()
@@ -248,11 +276,11 @@ class myHandler(BaseHTTPRequestHandler):
                     response = response + "<id>"+str(row[0])+"</id>"
                     response = response + "<name>"+str(row[1])+"</name>"
                     response = response + "<action>"+str(row[2])+"</action>"
-                    response = response + "<schedule>"+str(row[2])+"</schedule>"
-                    response = response + "<last_run>"+str(row[2])+"</last_run>"
-                    response = response + "<state>"+str(row[2])+"</state>"
-                    response = response + "<backupid>"+str(row[2])+"</backupid>"
-                    response = response + "<backuptyp>"+str(row[2])+"</backuptyp>"
+                    response = response + "<schedule>"+str(row[3])+"</schedule>"
+                    response = response + "<last_run>"+str(row[4])+"</last_run>"
+                    response = response + "<state>"+str(row[5])+"</state>"
+                    response = response + "<backupid>"+str(row[6])+"</backupid>"
+                    response = response + "<backuptyp>"+str(row[7])+"</backuptyp>"
                     response = response + "</task>"
                 response = response + "</tasks>"
                 response = response + "</data>"
@@ -386,11 +414,27 @@ class myHandler(BaseHTTPRequestHandler):
                 id = form['id'].value
                 name = form['name'].value
                 system = form['system'].value
-                host = form['host'].value
-                port = form['port'].value
-                username = form['username'].value
-                password = form['password'].value
                 path = form['path'].value
+                try:
+                    host = form['host'].value
+                except KeyError:
+                    host = ""
+                    
+                try:
+                    port = form['port'].value
+                except KeyError:
+                    port = ""
+                    
+                try:
+                    username = form['username'].value
+                except KeyError:
+                    username = ""
+                    
+                try:
+                    password = form['password'].value
+                except KeyError:
+                    password = ""
+                
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
