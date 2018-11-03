@@ -20,7 +20,7 @@ def finishbackup(task):
 
 def backupfailed(task, err):
     db.log(task, '=============FAILED=============')
-    db.log(task, f"{err}")
+    db.log(task, f"{err}".replace("'", '"'))
     updatetaskstate(task, 'failed')
     updatelastrundate(task)
 
