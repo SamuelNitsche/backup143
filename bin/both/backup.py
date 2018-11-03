@@ -70,7 +70,11 @@ while True:
                     # Initialize backup task
                     backup = Backup(task)
                     # Start backup
-                    backup.backup()
+                    try:
+                        backup.backup()
+                    except Exception:
+                        print('Backup failed')
+                        updatetaskstate(task['id'], 'failed')
                     finishbackup(task['id'])
                     print('Backup for task ' + str(task['id']) + ' created')
 
