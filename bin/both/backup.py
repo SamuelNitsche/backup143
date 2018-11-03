@@ -72,11 +72,12 @@ while True:
                     # Start backup
                     try:
                         backup.backup()
-                    except Exception:
-                        print('Backup failed')
+                        finishbackup(task['id'])
+                        print('Backup for task ' + str(task['id']) + ' created')
+                    except Exception as e:
                         updatetaskstate(task['id'], 'failed')
-                    finishbackup(task['id'])
-                    print('Backup for task ' + str(task['id']) + ' created')
+                        print('Backup failed')
+                        print(e)
 
             # Start backup immediately if never ran before
             else:
@@ -87,11 +88,12 @@ while True:
                 # Start backup
                 try:
                     backup.backup()
-                except Exception:
-                    print('Backup failed')
+                    finishbackup(task['id'])
+                    print('Backup for task ' + str(task['id']) + ' created')
+                except Exception as e:
                     updatetaskstate(task['id'], 'failed')
-                finishbackup(task['id'])
-                print('Backup for task ' + str(task['id']) + ' created')
+                    print('Backup failed')
+                    print(e)
         else:
             print('Backup already running')
 

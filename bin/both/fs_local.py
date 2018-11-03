@@ -12,6 +12,7 @@ class Backup:
         self.task = task
 
     def backup(self):
+        raise Exception('test')
         # Change pwd for easier tree walking
         os.chdir(self.task['source'])
         # Checking compression mode
