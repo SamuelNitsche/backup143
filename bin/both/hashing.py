@@ -1,7 +1,7 @@
 import hashlib
 import os
 from pathlib import Path
-from configparser import ConfigParser
+from configparser import ConfigParser, DuplicateSectionError, NoOptionError
 
 # Calculate folder path for ini files
 hashpath = str(Path.home()) + os.sep + 'backup143'
@@ -36,7 +36,7 @@ def filechanged(task, dir, file):
     # Add new section if it does not exist
     try:
         config.add_section(dir)
-    except Exception:
+    except DuplicateSectionError:
         pass
 
     haschanged = False
@@ -53,11 +53,14 @@ def filechanged(task, dir, file):
         else:
             print(file + ' has not changed')
 
-    except Exception:
+    except NoOptionError:
         # If file is new set hash
         print('No value set. Setting current hash')
         config.set(dir, file, hasher.hexdigest())
-        haschanged = False
+        haschanged = True
+    except Exception as e:
+        print('Other error occurred')
+        print(e)
 
     # Save new values to ini file
     with open(hashfile, 'w') as configfile:
