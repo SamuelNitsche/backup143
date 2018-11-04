@@ -207,6 +207,10 @@ body{
 	transition: all ease-in-out .2s;
 }
 
+.rightnav {
+    margin-left:auto;
+}
+
 #tasks-wrap {
   position:fixed;
   bottom:0;

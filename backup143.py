@@ -1,6 +1,7 @@
 from sys import platform as _platform
 import sys
 import os
+import ctypes
 import time
 import __main__
 import threading
@@ -15,6 +16,14 @@ from bin.both.log import LogginSystem
 log = LogginSystem('service')
 log.write('Detected Python version: ' + sys.version)
 
+try:
+    is_admin = os.getuid() == 0
+except AttributeError:
+    is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+if is_admin == False:
+    print("[WARNING] You don't have Admin privileges! This may cause some Permission Error's while running a Backup!")
+    
 threads = []
 
 if _platform == "win32" or _platform == "win64":

@@ -37,6 +37,6 @@ Alle FileSystems sollten immer dieselbe Logik / denselben Aufbau haben (connenct
 [] Virencheck mit VirusTotal API (Gibt laut Auftrag extrapunkte).  (Bulk beispiel da API auf 4 Anfragen / min begränzt: https://github.com/botherder/virustotal/blob/master/vt.py)
 [] Virencheck als option bei Backups hinzufügen (DB + Webinterface)
 [] Skript für Windows unter Dienste hinzufügen (mit PyWin32)
-[] Prüfen ob Skript als root / Administrator gestartet wurde (Besser wegen Dateiberechtigungen)
+[X] Prüfen ob Skript als root / Administrator gestartet wurde (Besser wegen Dateiberechtigungen)
 [] SQL INJECTION verhinden (bin/both/dbcon.py). Korrekt wäre es wenn man die Variablen nicht direkt im SQL Befehl verwendet wie bei OOP PHP. Jedoch müsste man dann die Funktion query() umschreiben und kp wie am besten.
 [] Code vereinheiltichen. Teilweise werden returns von FUnktionen direkt verwendet, teilweise als Variable definiert und die Variable verwendet.

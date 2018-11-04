@@ -1,7 +1,4 @@
 class Task {
-	constructor(id) {
-		this.taskid = id;
-	}
 	
 	get_runningtasks() {
 		var req = new XMLHttpRequest();
@@ -47,6 +44,41 @@ class Task {
 		});
 		return t_html;
 	}
+    
+    get_restores(){
+        var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+		
+		var self = this;
+		var t_html = "";
+		
+		$.ajax({
+			type: "get",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/get/restores",
+			dataType: "xml",
+			async: false,
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+                    t_html = "<table style='width:100%;'>";
+                    t_html = t_html + "<tr><th>Name</th><th>State</th></tr>";
+					$(data).find('restore').each(function(){
+                        var id = $(this).find('id').text();
+                        var name = $(this).find('name').text();
+                        var state = $(this).find('state').text();
+                        t_html = t_html + "<tr onclick='var task = new Task(); task.get_tasklog("+id+")'><td>"+name+"</td><td>"+state+"</td></tr>";
+					});
+				} else {
+					var error = $(data).find('message').text();
+					t_html = error;
+				}
+			}
+		});
+		return t_html;
+    }
 	
 	get_taskinfo(id){
 		var req = new XMLHttpRequest();
@@ -300,7 +332,6 @@ class Task {
 		var self = this;
 		
 		var name = $('#task_name').val();
-		var action = 'backup';
         var backupid = $('#task_backupid').val();
 		var backuptyp = $('#task_backuptyp').val();
 		var time = $('#task_time').val();
@@ -315,15 +346,15 @@ class Task {
 		
 		$.ajax({
 			type: "post",
-			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/createtask",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/createbackuptask",
 			dataType: "xml",
 			async: false,
-			data: { "name": name, "action": action, "backupid": backupid, "backuptyp": backuptyp, "time": time, "days": daylist },
+			data: { "name": name, "backupid": backupid, "backuptyp": backuptyp, "time": time, "days": daylist },
 			xhrFields: { withCredentials:true },
 			success: function(data) {
 				var apistatus = $(data).find('status').text();
 				if(apistatus == "OK"){
-					showpopup("Success", "Successfully created Task!");
+					showpopup("Success", "Successfully created Backup Task!");
 					$('#js_backuplist').html(self.get_backups());
 				} else {
 					var error = $(data).find('message').text()
@@ -358,5 +389,49 @@ class Task {
         html = html + "<br/>";
         html = html + "<b>NOTE</b> For incremental and differential you should plan 1 additional Full Backup!";
         showpopup("Create Backuptask", html);
+    }
+    
+    create_restoretask(){
+		var req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
+		var apiportheader = req.getResponseHeader('X-APIPORT');
+		
+		var self = this;
+		
+        var taskid = $('#task_taskid').val();
+		var backupfile = $('#task_backupfilesid').val();
+		
+		$.ajax({
+			type: "post",
+			url: window.location.protocol + "//" + window.location.hostname + ":" + apiportheader + "/post/createrestoretask",
+			dataType: "xml",
+			async: false,
+			data: { "taskid": taskid, "backupfile": backupfile },
+			xhrFields: { withCredentials:true },
+			success: function(data) {
+				var apistatus = $(data).find('status').text();
+				if(apistatus == "OK"){
+					showpopup("Success", "Successfully created Restore Task!");
+                    var task = new Task();
+					$('#js_restorelist').html(task.get_restores());
+				} else {
+					var error = $(data).find('message').text()
+					showpopup("ERROR", error);
+				}
+			}
+		});
+	}
+    
+    createrestorediv(){
+        var html = "<table style='width:100%;'>";
+        html = html + "<tr><td><label>Backup: </label></td><td><select id='task_taskid'>";
+        var restore = new Restore();
+        html = html + restore.get_tasksdropdown();
+        html = html + "</select></td></tr>";
+        html = html + "<tr><td><label>Time: </label></td><td><select id='task_backupfilesid'></select></td></tr>";
+        html = html + "<tr><td><button class='default' onclick='var task = new Task(); task.create_restoretask();'>Create</button></td></tr>";
+        html = html + "</table>";
+        $('#js_restorecreate').html(html);
     }
 }

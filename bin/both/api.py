@@ -169,6 +169,35 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(xmlheader + response, 'utf8'))
                 log = logsys('api')
                 log.write(str("Successful: Sending tasks!"))
+            # GET RESTORES
+            elif self.path=="/get/restores":
+                db = dbmanager()
+                response = "<response>"
+                response = response + "<info>"
+                response = response + "<status>OK</status>"
+                response = response + "</info>"
+                response = response + "<data>"
+                response = response + "<restores>"
+                qry = db.query("SELECT t.id,t.name,t.state,t.backupid,t.backuptyp FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.action='restore';")
+                for row in qry:
+                    response = response + "<restore>"
+                    response = response + "<id>"+str(row[0])+"</id>"
+                    response = response + "<name>"+str(row[1])+"</name>"
+                    response = response + "<state>"+str(row[2])+"</state>"
+                    response = response + "<backupid>"+str(row[3])+"</backupid>"
+                    response = response + "<backuptyp>"+str(row[4])+"</backuptyp>"
+                    response = response + "</restore>"
+                response = response + "</restores>"
+                response = response + "</data>"
+                response = response + "</response>"
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                self.send_header('Access-Control-Allow-Credentials','true')
+                self.send_header('Content-type','text/xml')
+                self.end_headers()
+                self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                log = logsys('api')
+                log.write(str("Successful: Sending Restores!"))
             else:
                 response = "<response>"
                 response = response + "<status>ERROR</status>"
@@ -263,6 +292,62 @@ class myHandler(BaseHTTPRequestHandler):
                     self.wfile.write(bytes(xmlheader + response, 'utf8'))
                     log = logsys('api')
                     log.write(str("ERROR: Tasklog not found for user!"))
+            # GET BACKUPFILESLIST BY TASKID
+            elif self.path == "/post/backupfileslistbytask":
+                form = cgi.FieldStorage(
+                    fp=self.rfile, 
+                    headers=self.headers,
+                    environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
+
+                taskid = form['taskid'].value
+                userid = self.get_session('userid')
+                
+                db = dbmanager()
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + userid + "' AND t.id = '" + taskid + "';")
+                usercheck = qry.fetchone()
+                
+                if(usercheck[0] == 1):
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "<data>"
+                    response = response + "<backupfiles>"
+                    qry = db.query("SELECT id,date,taskid,state,path FROM '143_backupfiles' WHERE taskid='"+taskid+"' ORDER BY date DESC LIMIT 80;")
+                    for row in qry:
+                        response = response + "<backupfile>"
+                        response = response + "<id>"+str(row[0])+"</id>"
+                        response = response + "<date>"+str(row[1])+"</date>"
+                        response = response + "<taskid>"+str(row[2])+"</taskid>"
+                        response = response + "<state>"+str(row[3])+"</state>"
+                        response = response + "<path>"+str(row[4])+"</path>"
+                        response = response + "</backupfile>"
+                    response = response + "</backupfiles>"
+                    response = response + "</data>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Sending Backupfilelist!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>This Task doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Backupfilelist not found for user!"))
             # GET TASKS BY BACKUP ID
             elif self.path=="/post/backuptasks":
                 form = cgi.FieldStorage(
@@ -426,15 +511,14 @@ class myHandler(BaseHTTPRequestHandler):
                     self.wfile.write(bytes(xmlheader + response, 'utf8'))
                     log = logsys('api')
                     log.write(str("ERROR: Pool not found for user!"))
-            # CREATE TASK
-            elif self.path=="/post/createtask":
+            # CREATE BACKUP TASK
+            elif self.path=="/post/createbackuptask":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
                     headers=self.headers,
                     environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
 
                 name = form['name'].value
-                action = form['action'].value
                 backupid = form['backupid'].value
                 backuptyp = form['backuptyp'].value
                 time = form['time'].value
@@ -450,7 +534,7 @@ class myHandler(BaseHTTPRequestHandler):
                 checkdependency = qry.fetchone()
                 
                 if checkdependency[0] == 1:
-                    qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,state,backupid,backuptyp) VALUES ('"+name+"','"+action+"','"+cron+"','waiting','"+backupid+"', '"+backuptyp+"');")
+                    qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,state,backupid,backuptyp) VALUES ('"+name+"','backup','"+cron+"','waiting','"+backupid+"', '"+backuptyp+"');")
                     
                     response = "<response>"
                     response = response + "<info>"
@@ -464,7 +548,60 @@ class myHandler(BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(bytes(xmlheader + response, 'utf8'))
                     log = logsys('api')
-                    log.write(str("Successful: Created Task!"))
+                    log.write(str("Successful: Created Backup Task!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>The Backup you selected doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Backup not found for user!"))
+            # CREATE RESTORE TASK
+            elif self.path=="/post/createrestoretask":
+                form = cgi.FieldStorage(
+                    fp=self.rfile, 
+                    headers=self.headers,
+                    environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
+
+                taskid = form['taskid'].value
+                backupfile = form['backupfile'].value
+                userid = self.get_session('userid')
+				
+                db = dbmanager()
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' b ON t.backupid = b.id INNER JOIN '143_pool' p ON b.pool_src = p.id WHERE p.ownerid='"+userid+"' AND t.id='"+taskid+"';")
+                checkdependency_task = qry.fetchone()
+                qry = db.query("SELECT COUNT(*) FROM '143_backupfiles' bf INNER JOIN '143_tasks' t ON bf.taskid = t.id INNER JOIN '143_backups' b ON t.backupid = b.id INNER JOIN '143_pool' p ON b.pool_src = p.id WHERE p.ownerid='"+userid+"' AND bf.id='"+backupfile+"';")
+                checkdependency_backupfile = qry.fetchone()
+                
+                if checkdependency_task[0] == 1 and checkdependency_backupfile[0] == 1:
+                    qry = db.query("SELECT name,backupid FROM '143_tasks' WHERE id = '" + taskid + "';")
+                    taskinfo = qry.fetchone()
+                    qry = db.query("SELECT date FROM '143_backupfiles' WHERE id = '" + backupfile + "';")
+                    backupfileinfo = qry.fetchone()
+                    name = "Restore backup "+str(taskinfo[0])+" from "+str(backupfileinfo[0])
+                    qry = db.query("INSERT INTO '143_tasks' (name,action,state,backupid,backuptyp) VALUES ('"+str(name)+"','restore','waiting','"+str(taskinfo[1])+"', '"+str(backupfile)+"');")
+                    
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Created Restore Task!"))
                 else:
                     response = "<response>"
                     response = response + "<info>"
