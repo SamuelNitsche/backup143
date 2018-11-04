@@ -1,7 +1,7 @@
 import hashlib
 import os
 from pathlib import Path
-from configparser import ConfigParser, DuplicateSectionError, NoOptionError
+from configparser import ConfigParser
 
 # Calculate folder path for ini files
 inipath = str(Path.home()) + os.sep + 'backup143'
@@ -17,7 +17,7 @@ def filechanged(task, dir, file, date, lastini):
     newini = ConfigParser()
 
     # Get directory for backup ini files
-    taskinidir = os.path.join(inipath, str(task['id']))
+    taskinidir = os.path.join(inipath, str(task['backupid']))
 
     # Create directory for backup ini files if not exists
     if not os.path.exists(taskinidir):
@@ -52,6 +52,16 @@ def filechanged(task, dir, file, date, lastini):
     # Return true if backup type is full
     if task['type'] == 'full':
         print('Type is full. Backing up file ' + file)
+
+        if not newini.has_section(dir):
+            newini.add_section(dir)
+
+        newini.set(dir, file, hasher.hexdigest())
+
+        # Save new values to ini file
+        with open(newhashfile, 'w') as configfile:
+            newini.write(configfile)
+
         return True
 
     if os.path.exists(oldhashfile):

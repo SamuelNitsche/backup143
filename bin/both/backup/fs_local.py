@@ -14,6 +14,7 @@ class Backup:
     def backup(self):
         # Change pwd for easier tree walking
         os.chdir(self.task['source'])
+
         # Checking compression mode
         if self.task['compression'] == 'zip':
             # Check if destination folder exists
@@ -22,9 +23,11 @@ class Backup:
 
             # Calculate name for backup file
             date = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-            destination = self.task['dest'] + os.sep + date + '.zip'
+            destination = self.task['dest'] + os.sep + self.task['type'] + '_' + date + '.zip'
+
             # Initialize zip file for backup
             zipf = zipfile.ZipFile(destination, "w")
+
             # Walk directory
             for subdir, dirs, files in os.walk("."):
                 # if self.task['type'] == 'full':
@@ -35,14 +38,34 @@ class Backup:
                 #         zipf.write(path)
 
                 for file in files:
-                    # Check if file hash has changed (only for incremental backup)
-                    if filechanged(self.task, os.path.join(self.task['source'], subdir), file, date, self.task['last_run']):
-                        print('File ' + file + ' has changed. Backing up.')
-                        self.db.log(self.task['id'], "Created backup of file " + file)
-                        # Write file to zip
-                        zipf.write(os.path.join(subdir, file))
+                    if self.task['type'] == 'incremental':
+                        # Check if file hash has changed (only for incremental backup)
+                        if filechanged(self.task, os.path.join(self.task['source'], subdir), file, date,
+                                       self.task['last_run']):
+                            print('File ' + file + ' has changed. Backing up.')
+                            self.db.log(self.task['id'], "Created backup of file " + file)
+                            # Write file to zip
+                            zipf.write(os.path.join(subdir, file))
 
-            return {
+                    elif self.task['type'] == 'differential':
+                        # Check if file hash has changed (only for incremental backup)
+                        if filechanged(self.task, os.path.join(self.task['source'], subdir), file, date,
+                                       self.task['last_full_run']):
+                            print('File ' + file + ' has changed. Backing up.')
+                            self.db.log(self.task['id'], "Created backup of file " + file)
+                            # Write file to zip
+                            zipf.write(os.path.join(subdir, file))
+
+                    elif self.task['type'] == 'full':
+                        # Check if file hash has changed (only for incremental backup)
+                        if filechanged(self.task, os.path.join(self.task['source'], subdir), file, date,
+                                       self.task['last_run']):
+                            print('File ' + file + ' has changed. Backing up.')
+                            self.db.log(self.task['id'], "Created backup of file " + file)
+                            # Write file to zip
+                            zipf.write(os.path.join(subdir, file))
+
+            data = {
                 'task': self.task['id'],
                 'date': date,
                 'status': 'ok',
@@ -56,9 +79,11 @@ class Backup:
 
             # Calculate name for backup folder
             date = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-            destination = self.task['dest'] + os.sep + date
+            destination = self.task['dest'] + os.sep + self.task['type'] + '_' + date
+
             # Create backup folder
             os.mkdir(destination)
+
             for subdir, dirs, files in os.walk("."):
                 for dir in dirs:
                     self.db.log(self.task['id'], "Created backup of folder " + dir)
@@ -67,12 +92,13 @@ class Backup:
 
                 for file in files:
                     # Check if file hash has changed (only for incremental backup)
-                    if filechanged(self.task, os.path.join(self.task['source'], subdir), file, date):
+                    if filechanged(self.task, os.path.join(self.task['source'], subdir), file, date,
+                                   self.task['last_run']):
                         self.db.log(self.task['id'], "Created backup of file " + file)
                         # Copy file to new directory (preserve metadata)
                         shutil.copy2(os.path.join(subdir, file), os.path.join(destination, subdir))
 
-            return {
+            data = {
                 'task': self.task['id'],
                 'date': date,
                 'status': 'ok',
@@ -82,3 +108,17 @@ class Backup:
         else:
             # No valid compression mode detected
             raise Exception('Could not determine compression mode')
+
+        backupid = self.task['backupid']
+        query = f"UPDATE '143_backups' SET last_full_run = '{date}' WHERE id = {backupid}"
+        if self.task['type'] == 'full':
+            print('Created full backup')
+            self.db.query(query)
+
+        elif self.task['type'] == 'incremental' or self.task['type'] == 'differential':
+            print(self.task['last_run'])
+            if self.task['last_run'] is None:
+                print('Backup ran never before')
+                self.db.query(query)
+
+        return data
