@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS "143_backups" (
 	pool_dst integer,
 	compare VARCHAR(255),
 	encrypt boolean,
-	compression VARCHAR(255)
+	compression VARCHAR(255),
+	last_full_run datetime
 );
 
 CREATE TABLE IF NOT EXISTS "143_tasklog" (
