@@ -2,6 +2,7 @@ from bin.both.dbcon import dbmanager
 from crontab import CronTab
 from datetime import datetime
 import time
+from bin.both.utils import recordbackupfile
 
 db = dbmanager(True)
 threshold = 10
@@ -12,10 +13,11 @@ def startbackup(task):
     updatetaskstate(task, 'running')
 
 
-def finishbackup(task):
-    db.log(task, '=============FINIHSED=============')
-    updatelastrundate(task)
-    updatetaskstate(task, 'waiting')
+def finishbackup(data):
+    db.log(data['task'], '=============FINIHSED=============')
+    updatelastrundate(data['task'])
+    updatetaskstate(data['task'], 'waiting')
+    recordbackupfile(data['task'], data['date'], data['status'], data['path'])
 
 
 def backupfailed(task, err):
@@ -23,6 +25,7 @@ def backupfailed(task, err):
     db.log(task, f"{err}".replace("'", '"'))
     updatetaskstate(task, 'failed')
     updatelastrundate(task)
+
 
 
 def updatelastrundate(task):
@@ -78,8 +81,8 @@ while True:
                     backup = Backup(task)
                     # Start backup
                     try:
-                        backup.backup()
-                        finishbackup(task['id'])
+                        result = backup.backup()
+                        finishbackup(result)
                         print('Backup for task ' + str(task['id']) + ' created')
                     except Exception as e:
                         backupfailed(task['id'], e)
@@ -94,8 +97,8 @@ while True:
                 backup = Backup(task)
                 # Start backup
                 try:
-                    backup.backup()
-                    finishbackup(task['id'])
+                    result = backup.backup()
+                    finishbackup(result)
                     print('Backup for task ' + str(task['id']) + ' created')
                 except Exception as e:
                     backupfailed(task['id'], e)

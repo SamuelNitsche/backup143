@@ -10,7 +10,7 @@ if not os.path.exists(hashpath):
     os.mkdir(hashpath)
 
 
-def filechanged(task, dir, file):
+def filechanged(task, dir, file, date, lastini):
     # Return true if backup type is full
     if task['type'] == 'full':
         print('Type is full. Backing up file ' + file)
