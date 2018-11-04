@@ -16,7 +16,7 @@ def startbackup(task):
 
 def finishbackup(data):
     db.log(data['task'], '=============FINIHSED=============')
-    updatelastrundate(data['task'])
+    updatelastrundate(data['task'], data['date'])
     updatetaskstate(data['task'], 'waiting')
     recordbackupfile(data['task'], data['date'], data['status'], data['path'])
 
@@ -25,11 +25,10 @@ def backupfailed(task, err):
     db.log(task, '=============FAILED=============')
     db.log(task, f"{err}".replace("'", '"'))
     updatetaskstate(task, 'failed')
-    updatelastrundate(task)
+    updatelastrundate(task, str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S')))
 
 
-def updatelastrundate(task):
-    date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+def updatelastrundate(task, date):
     db.query('UPDATE \'143_tasks\' SET \'last_run\' = \'' + date + '\' WHERE id = ' + str(task))
 
 
