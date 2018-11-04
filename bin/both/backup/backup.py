@@ -61,11 +61,11 @@ while True:
     for task in tasks:
         # Import correct script for filesystem
         if task['source_fs'] == 'ftp':
-            from bin.both.fs_ftp import Backup
+            from bin.both.backup.fs_ftp import Backup
         elif task['source_fs'] == 'sftp':
-            from bin.both.fs_sftp import Backup
+            from bin.both.backup.fs_sftp import Backup
         else:
-            from bin.both.fs_local import Backup
+            from bin.both.backup.fs_local import Backup
 
         # Check if task is running
         if task['state'] is not 'running':
