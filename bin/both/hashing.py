@@ -13,11 +13,6 @@ if not os.path.exists(inipath):
 def filechanged(task, dir, file, date, lastini):
     haschanged = False
 
-    # Return true if backup type is full
-    if task['type'] == 'full':
-        print('Type is full. Backing up file ' + file)
-        return True
-
     oldini = ConfigParser()
     newini = ConfigParser()
 
@@ -53,6 +48,11 @@ def filechanged(task, dir, file, date, lastini):
 
     # Parse ini file
     newini.read(newhashfile)
+
+    # Return true if backup type is full
+    if task['type'] == 'full':
+        print('Type is full. Backing up file ' + file)
+        return True
 
     if os.path.exists(oldhashfile):
         oldini.read(oldhashfile)
