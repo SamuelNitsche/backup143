@@ -4,66 +4,102 @@ from pathlib import Path
 from configparser import ConfigParser, DuplicateSectionError, NoOptionError
 
 # Calculate folder path for ini files
-hashpath = str(Path.home()) + os.sep + 'backup143'
+inipath = str(Path.home()) + os.sep + 'backup143'
 # Create folder if not exists
-if not os.path.exists(hashpath):
-    os.mkdir(hashpath)
+if not os.path.exists(inipath):
+    os.mkdir(inipath)
 
 
 def filechanged(task, dir, file, date, lastini):
+    haschanged = False
+
     # Return true if backup type is full
     if task['type'] == 'full':
         print('Type is full. Backing up file ' + file)
         return True
 
-    config = ConfigParser()
+    oldini = ConfigParser()
+    newini = ConfigParser()
 
-    hashfile = os.path.join(hashpath, str(task['id']) + '.ini')
+    # Get directory for backup ini files
+    taskinidir = os.path.join(inipath, str(task['id']))
+
+    # Create directory for backup ini files if not exists
+    if not os.path.exists(taskinidir):
+        os.mkdir(taskinidir)
+
+    # Get path from hashfile of old ini
+    lastinidate = str(lastini).replace(' ', '_').replace(':', '-')
+    oldhashfile = taskinidir + os.sep + lastinidate + '.ini'
+    print('Old ini file: ' + oldhashfile)
+
+    newhashfile = taskinidir + os.sep + date + '.ini'
+    print('New ini file: ' + newhashfile)
+
     hasher = hashlib.sha3_512()
+
     f = open(os.path.join(dir, file), 'rb')
+
     # Read file
     buf = f.read()
+
     # Calculate hash of file
     hasher.update(buf)
+
     # Create ini file for task if it does not exist
-    if not os.path.exists(hashfile):
-        f = open(hashfile, "w+")
+    if not os.path.exists(newhashfile):
+        f = open(newhashfile, "w+")
         f.close()
 
     # Parse ini file
-    config.read(hashfile)
+    newini.read(newhashfile)
+
+    if os.path.exists(oldhashfile):
+        oldini.read(oldhashfile)
+    else:
+        print('Old hash file does not exist. Creating new one with current values')
+        if not newini.has_section(dir):
+            newini.add_section(dir)
+
+        newini.set(dir, file, hasher.hexdigest())
+
+        haschanged = True
+
+        # Save new values to ini file
+        with open(newhashfile, 'w') as configfile:
+            newini.write(configfile)
+
+        return haschanged
 
     # Add new section if it does not exist
-    try:
-        config.add_section(dir)
-    except DuplicateSectionError:
-        pass
+    if not newini.has_section(dir):
+        newini.add_section(dir)
 
-    haschanged = False
-    try:
-        # Get hash from file
-        hash = config.get(dir, file)
+    if oldini.has_section(dir):
+        if oldini.has_option(dir, file):
+            # Get hash from file
+            hash = oldini.get(dir, file)
 
-        # Compare hash from file with new hash of file
-        if not hash == hasher.hexdigest():
-            print('Hash has changed')
-            # Set new hash in file
-            config.set(dir, file, hasher.hexdigest())
-            haschanged = True
+            # Compare hash from file with new hash of file
+            if not hash == hasher.hexdigest():
+                print('Hash has changed')
+                # Set new hash in file
+                newini.set(dir, file, hasher.hexdigest())
+                haschanged = True
+            else:
+                print(file + ' has not changed')
+                newini.set(dir, file, hasher.hexdigest())
+
         else:
-            print(file + ' has not changed')
+            newini.set(dir, file, hasher.hexdigest())
+            haschanged = True
 
-    except NoOptionError:
-        # If file is new set hash
-        print('No value set. Setting current hash')
-        config.set(dir, file, hasher.hexdigest())
+    else:
+        newini.set(dir, file, hasher.hexdigest())
         haschanged = True
-    except Exception as e:
-        print('Other error occurred')
-        print(e)
 
     # Save new values to ini file
-    with open(hashfile, 'w') as configfile:
-        config.write(configfile)
+    with open(newhashfile, 'w') as configfile:
+        newini.write(configfile)
 
     return haschanged

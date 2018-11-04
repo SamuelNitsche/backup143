@@ -80,14 +80,14 @@ while True:
                     # Initialize backup task
                     backup = Backup(task)
                     # Start backup
-                    try:
-                        result = backup.backup()
-                        finishbackup(result)
-                        print('Backup for task ' + str(task['id']) + ' created')
-                    except Exception as e:
-                        backupfailed(task['id'], e)
-                        print('Backup failed')
-                        print(e)
+                    # try:
+                    result = backup.backup()
+                    finishbackup(result)
+                    print('Backup for task ' + str(task['id']) + ' created')
+                    # except Exception as e:
+                    #     backupfailed(task['id'], e)
+                    #     print('Backup failed')
+                    #     print(e)
 
             # Start backup immediately if never ran before
             else:
