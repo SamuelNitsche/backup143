@@ -27,28 +27,11 @@ class myHandler(BaseHTTPRequestHandler):
         xmlheader = '<?xml version="1.0" encoding="UTF-8"?>'
 
         if self.get_session('userid') != False:
-            if self.path=="/get/sysinfo":
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<platform>" + platform.platform() + "</platform>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Sending sysinfo!"))
             ############################################
             # GET INFORMATIONS (Pool, Backup, Task)    #
             ############################################
             #GET POOL
-            elif self.path=="/get/pools":
+            if self.path=="/get/pools":
                 db = dbmanager()
                 qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid = '" + self.get_session('userid') + "';")
                 count_pools = qry.fetchone()
@@ -234,32 +217,52 @@ class myHandler(BaseHTTPRequestHandler):
                     environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
 
                 taskid = form['id'].value
-				
+                userid = self.get_session('userid')
+                
                 db = dbmanager()
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<messages>"
-                qry = db.query("SELECT date,taskid,value FROM '143_tasklog' WHERE taskid='"+taskid+"' ORDER BY 'id' DESC LIMIT 80;")
-                for row in qry:
-                    response = response + "<message>"
-                    response = response + "<datetime>"+str(row[0])+"</datetime>"
-                    response = response + "<taskid>"+str(row[1])+"</taskid>"
-                    response = response + "<value>"+str(row[2])+"</value>"
-                    response = response + "</message>"
-                response = response + "</messages>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Sending tasklog!"))
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + userid + "' AND t.id = '" + taskid + "';")
+                usercheck = qry.fetchone()
+                
+                if(usercheck[0] == 1):
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "<data>"
+                    response = response + "<messages>"
+                    qry = db.query("SELECT date,taskid,value FROM '143_tasklog' WHERE taskid='"+taskid+"' ORDER BY date DESC LIMIT 80;")
+                    for row in qry:
+                        response = response + "<message>"
+                        response = response + "<datetime>"+str(row[0])+"</datetime>"
+                        response = response + "<taskid>"+str(row[1])+"</taskid>"
+                        response = response + "<value>"+str(row[2])+"</value>"
+                        response = response + "</message>"
+                    response = response + "</messages>"
+                    response = response + "</data>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Sending tasklog!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>This Task doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Tasklog not found for user!"))
             # GET TASKS BY BACKUP ID
             elif self.path=="/post/backuptasks":
                 form = cgi.FieldStorage(
@@ -268,38 +271,58 @@ class myHandler(BaseHTTPRequestHandler):
                     environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
 
                 backupid = form['id'].value
-				
+                userid = self.get_session('userid')
+                
                 db = dbmanager()
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<backupid>"+backupid+"</backupid>"
-                response = response + "<tasks>"
-                qry = db.query("SELECT id,name,action,schedule,last_run,state,backupid,backuptyp FROM '143_tasks' WHERE backupid='"+backupid+"' AND action='backup' ORDER BY 'id' DESC LIMIT 80;")
-                for row in qry:
-                    response = response + "<task>"
-                    response = response + "<id>"+str(row[0])+"</id>"
-                    response = response + "<name>"+str(row[1])+"</name>"
-                    response = response + "<action>"+str(row[2])+"</action>"
-                    response = response + "<schedule>"+str(row[3])+"</schedule>"
-                    response = response + "<last_run>"+str(row[4])+"</last_run>"
-                    response = response + "<state>"+str(row[5])+"</state>"
-                    response = response + "<backupid>"+str(row[6])+"</backupid>"
-                    response = response + "<backuptyp>"+str(row[7])+"</backuptyp>"
-                    response = response + "</task>"
-                response = response + "</tasks>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Sending backuptasks!"))
+                qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p ON b.pool_src = p.id WHERE b.id = '" + backupid + "' AND p.ownerid = '" + userid + "';")
+                usercheck = qry.fetchone()
+                
+                if(usercheck[0] == 1):
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "<data>"
+                    response = response + "<backupid>"+backupid+"</backupid>"
+                    response = response + "<tasks>"
+                    qry = db.query("SELECT id,name,action,schedule,last_run,state,backupid,backuptyp FROM '143_tasks' WHERE backupid='"+backupid+"' AND action='backup' ORDER BY 'id' DESC LIMIT 80;")
+                    for row in qry:
+                        response = response + "<task>"
+                        response = response + "<id>"+str(row[0])+"</id>"
+                        response = response + "<name>"+str(row[1])+"</name>"
+                        response = response + "<action>"+str(row[2])+"</action>"
+                        response = response + "<schedule>"+str(row[3])+"</schedule>"
+                        response = response + "<last_run>"+str(row[4])+"</last_run>"
+                        response = response + "<state>"+str(row[5])+"</state>"
+                        response = response + "<backupid>"+str(row[6])+"</backupid>"
+                        response = response + "<backuptyp>"+str(row[7])+"</backuptyp>"
+                        response = response + "</task>"
+                    response = response + "</tasks>"
+                    response = response + "</data>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Sending backuptasks!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>This Backup doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Backuptasks not found for user!"))
             ###########################################
             # CREATE COMMANDS (Pool, Backup, Task)    #
             ###########################################
@@ -334,7 +357,6 @@ class myHandler(BaseHTTPRequestHandler):
                     password = ""
 
                 path = form['path'].value
-                    
                 userid = self.get_session('userid')
 
                 db = dbmanager()
@@ -453,24 +475,43 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("UPDATE '143_pool' SET name='"+name+"', system='"+system+"', host='"+host+"', port='"+port+"', username='"+username+"', password='"+password+"', path='"+path+"' WHERE id='"+id+"' AND ownerid='"+userid+"';")
-				
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>"+id+"</id>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Updated Pool!"))
+                qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid = '" + userid + "' AND id = '" + id +"';")
+                usercheck = qry.fetchone()
+                
+                if(usercheck[0] == 1):
+                    qry = db.query("UPDATE '143_pool' SET name='"+name+"', system='"+system+"', host='"+host+"', port='"+port+"', username='"+username+"', password='"+password+"', path='"+path+"' WHERE id='"+id+"' AND ownerid='"+userid+"';")
+                    
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "<data>"
+                    response = response + "<id>"+id+"</id>"
+                    response = response + "</data>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Updated Pool!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>This Pool doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Pool not found for user!"))
             # UPDATE BACKUP
             elif self.path=="/post/updatebackup":
                 form = cgi.FieldStorage(
@@ -484,26 +525,46 @@ class myHandler(BaseHTTPRequestHandler):
                 compare = form['compare'].value
                 encrypt = form['encrypt'].value
                 compression = form['compression'].value
+                userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("UPDATE '143_backups' SET pool_src='"+pool_src+"',pool_dst='"+pool_dst+"',compare='"+compare+"',encrypt='"+encrypt+"',compression='"+compression+"' WHERE id='"+id+"';")
-				
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>"+id+"</id>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Updated Backup!"))
+                qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p ON b.pool_src = p.id WHERE b.id = '" + id + "' AND p.ownerid = '" + userid + "';")
+                usercheck = qry.fetchone()
+                
+                if(usercheck[0] == 1):
+                    qry = db.query("UPDATE '143_backups' SET pool_src='"+pool_src+"',pool_dst='"+pool_dst+"',compare='"+compare+"',encrypt='"+encrypt+"',compression='"+compression+"' WHERE id='"+id+"';")
+                    
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "<data>"
+                    response = response + "<id>"+id+"</id>"
+                    response = response + "</data>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Updated Backup!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>This Backup doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Backup not found for user!"))
             # UPDATE TASK
             elif self.path=="/post/updatetask":
                 form = cgi.FieldStorage(
@@ -516,30 +577,50 @@ class myHandler(BaseHTTPRequestHandler):
                 backuptyp = form['backuptyp'].value
                 time = form['time'].value
                 days = form['days'].value
+                userid = self.get_session('userid')
 				
                 time = time.split(":")
 
                 cron = time[1] + " " + time[0] + " * * " + days
                 
                 db = dbmanager()
-                qry = db.query("UPDATE '143_tasks' SET name='"+name+"',schedule='"+cron+"',backuptyp='"+backuptyp+"' WHERE id='"+id+"';")
-				
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "<data>"
-                response = response + "<id>"+id+"</id>"
-                response = response + "</data>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Updated Task!"))
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + userid + "' AND t.id = '" + id + "';")
+                usercheck = qry.fetchone()
+                
+                if(usercheck[0] == 1):
+                    qry = db.query("UPDATE '143_tasks' SET name='"+name+"',schedule='"+cron+"',backuptyp='"+backuptyp+"' WHERE id='"+id+"';")
+                    
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "<data>"
+                    response = response + "<id>"+id+"</id>"
+                    response = response + "</data>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Updated Task!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>This Task doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Task not found for user!"))
             ###########################################
             # DELETE COMMANDS (Pool, Backup, Task)    #
             ###########################################
@@ -554,7 +635,6 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                
                 qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid = '" + userid + "' AND id = '" + id +"';")
                 usercheck = qry.fetchone()
 				
@@ -628,10 +708,10 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p ON b.pool_src = p.id UNION SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p ON b.pool_dst = p.id WHERE b.id = '" + id + "' AND p.ownerid = '" + userid + "';")
+                qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p ON b.pool_src = p.id WHERE b.id = '" + id + "' AND p.ownerid = '" + userid + "';")
                 usercheck = qry.fetchone()
 				
-                if(usercheck[0] > 0):
+                if(usercheck[0] == 1):
 
                     qry = db.query("DELETE FROM '143_backups' WHERE id='"+id+"';")
                     qry = db.query("DELETE FROM '143_tasks' WHERE backupid='"+id+"';")
@@ -680,7 +760,7 @@ class myHandler(BaseHTTPRequestHandler):
                 userid = self.get_session('userid')
 				
                 db = dbmanager()
-                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id UNION SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_dst = p.id WHERE p.ownerid = '" + userid + "' AND t.id = '" + id + "';")
+                qry = db.query("SELECT COUNT(*) FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + userid + "' AND t.id = '" + id + "';")
                 usercheck = qry.fetchone()
 				
                 if(usercheck[0] == 1):

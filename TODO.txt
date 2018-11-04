@@ -32,7 +32,7 @@ Alle FileSystems sollten immer dieselbe Logik / denselben Aufbau haben (connenct
 [] Webinterface: Pools zugriff test Funktion (zum testen ob beispielsweise FTP Zugangsdaten stimmen etc.)
 [] Speedanzeige / Etwaige Zeitdauer bei laufenden Tasks
 [] Restore: Möglichkeit einzelne Dateien oder ganzes Backup zurückzuspielen
-[RUNNING] Webinterface: Möglichkeit vergangene Logs anzuzeigen
+[X] Webinterface: Möglichkeit vergangene Logs anzuzeigen
 [] Prozesse: Möglichkeit laufendes Backup zu stoppen / (Pausieren?)
 [] Virencheck mit VirusTotal API (Gibt laut Auftrag extrapunkte).  (Bulk beispiel da API auf 4 Anfragen / min begränzt: https://github.com/botherder/virustotal/blob/master/vt.py)
 [] Virencheck als option bei Backups hinzufügen (DB + Webinterface)
