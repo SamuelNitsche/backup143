@@ -80,6 +80,6 @@ CREATE TABLE IF NOT EXISTS "143_backupfiles" (
 	id integer PRIMARY KEY AUTOINCREMENT,
 	date datetime,
 	taskid integer,
-	status VARCHAR(255),
+	state VARCHAR(255),
 	path VARCHAR(255)
 );
