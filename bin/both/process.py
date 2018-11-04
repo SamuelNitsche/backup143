@@ -3,6 +3,7 @@ class process():
         import bin.both.webserver
         import bin.both.api
         import bin.both.backup.backup
+        import bin.both.restore.restore
         while True:
             '''thread = threading.Thread(target=self.run, args=())
             thread.daemon = True
