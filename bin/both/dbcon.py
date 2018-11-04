@@ -9,7 +9,7 @@ class dbmanager():
             script_dir = os.path.dirname(__file__)
             rel_path = "../../backup143.db"
             database_file_path = os.path.join(script_dir, rel_path)
-            self.conn = sqlite3.connect(database_file_path, timeout=30)
+            self.conn = sqlite3.connect(database_file_path, check_same_thread=False)
             if dict:
                 self.conn.row_factory = self.dict_factory
             self.cur = self.conn.cursor()

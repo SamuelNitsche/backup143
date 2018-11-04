@@ -22,11 +22,10 @@ class Restore:
             if not os.path.isdir(self.task['source']):
                 raise Exception('Source directory does not exist!')
 
-            # generate backup zipfile name
-            destination = self.task['dest'] + os.sep + self.task['backupfiledate'] + '.zip'
             # extract zipfile
-            zipf = zipfile.ZipFile(destination, "r")
+            zipf = zipfile.ZipFile(self.task['backupfilepath'], "r")
             zipf.extractall()
+            date = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
 
             return {
                 'task': self.task['id'],
@@ -42,10 +41,8 @@ class Restore:
             if not os.path.isdir(self.task['source']):
                 raise Exception('Source directory does not exist!')
 
-            # generate backup folder name
-            destination = self.task['dest'] + os.sep + self.task['backupfiledate']
             # Change pwd for easier tree walking
-            os.chdir(destination)
+            os.chdir(self.task['backupfilepath'])
             # Walk Files in Backup Folder and Copy to Source Folder
             for subdir, dirs, files in os.walk("."):
                 for dir in dirs:
@@ -58,7 +55,8 @@ class Restore:
                     self.db.log(self.task['id'], "Restored file " + file)
                     # Copy file to new directory (preserve metadata)
                     shutil.copy2(os.path.join(subdir, file), os.path.join(self.task['source'], subdir))
-
+                    date = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+                    
             return {
                 'task': self.task['id'],
                 'date': date,

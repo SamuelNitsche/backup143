@@ -3,7 +3,7 @@ from crontab import CronTab
 from datetime import datetime
 import time
 from bin.both.utils import recordbackupfile
-import threading
+from threading import Thread
 
 db = dbmanager(True)
 threshold = 10
@@ -38,6 +38,7 @@ def updatetaskstate(task, state):
 
 
 def checkforbackups():
+    db = dbmanager(True)
     while True:
         # Fetch all tasks from database
         query = db.query('SELECT c.path AS source, '
@@ -114,5 +115,4 @@ def checkforbackups():
 
         time.sleep(10)
 
-backupcheck = threading.Thread(target=checkforbackups())
-backupcheck.start()
+Thread(target = checkforbackups).start()

@@ -1,8 +1,9 @@
 from bin.both.dbcon import dbmanager
 from datetime import datetime
 import time
-import threading
+from threading import Thread
 
+db = dbmanager(True)
 
 def startrestore(task):
     db.log(task, '=============STARTING=============')
@@ -13,7 +14,6 @@ def finishrestore(data):
     db.log(data['task'], '=============FINIHSED=============')
     updatelastrundate(data['task'])
     updatetaskstate(data['task'], 'finished')
-    recordbackupfile(data['task'], data['date'], data['status'], data['path'])
 
 
 def restorefailed(task, err):
@@ -33,6 +33,7 @@ def updatetaskstate(task, state):
     
     
 def checkforrestores():
+    db = dbmanager(True)
     while True:
         # Fetch all tasks from database
         query = db.query('SELECT c.path AS source, '
@@ -52,13 +53,13 @@ def checkforrestores():
                          'a.action, '
                          'e.date AS backupfiledate, '
                          'e.taskid AS backupfiletask, '
-                         'e.state AS backupfilestate '
+                         'e.state AS backupfilestate, '
                          'e.path AS backupfilepath '
                          'FROM \'143_tasks\' AS a '
                          'JOIN \'143_backups\' AS b ON a.backupid = b.id '
                          'JOIN \'143_pool\' AS c ON b.pool_src = c.id '
                          'JOIN \'143_pool\' AS d ON b.pool_dst = d.id '
-                         'JOIN \'143_backupfiles\' AS e ON a.id = e.taskid '
+                         'JOIN \'143_backupfiles\' AS e ON a.backupfilesid = e.id '
                          'WHERE a.action = \'restore\'')
 
         tasks = query.fetchall()
@@ -73,23 +74,19 @@ def checkforrestores():
 
             # Check if task is running and not finished
             if task['state'] is not 'finished' and task['state'] is not 'running':
-                # Check if Task never run before
-                if task['last_run'] is None:
-
-                    print('Starting normal for task ' + str(task['id']))
-                    startrestore(task['id'])
-                    # Initialize restore task
-                    restore = Restore(task)
-                    # Start restore
-                    try:
-                        result = restore.restore()
-                        finishrestore(result)
-                        print('Restore for task ' + str(task['id']) + ' created')
-                    except Exception as e:
-                        restorefailed(task['id'], e)
-                        print('Restore failed')
-                        print(e)
+                print('Starting normal for task ' + str(task['id']))
+                startrestore(task['id'])
+                # Initialize restore task
+                restore = Restore(task)
+                # Start restore
+                try:
+                    result = restore.restore()
+                    finishrestore(result)
+                    print('Restore for task ' + str(task['id']) + ' created')
+                except Exception as e:
+                    restorefailed(task['id'], e)
+                    print('Restore failed')
+                    print(e)
         time.sleep(10)
         
-restorecheck = threading.Thread(target=checkforrestores())
-restorecheck.start()
+Thread(target = checkforrestores).start()
