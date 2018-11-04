@@ -76,3 +76,10 @@ CREATE TABLE IF NOT EXISTS "143_tasklog" (
 	value VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS "143_backupfiles" (
+	id integer PRIMARY KEY AUTOINCREMENT,
+	date datetime,
+	taskid integer,
+	status VARCHAR(255),
+	path VARCHAR(255)
+);
