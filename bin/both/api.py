@@ -146,7 +146,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response = response + "<waiting>" + str(count_waiting[0]) + "</waiting>"
                 response = response + "<failed>" + str(count_failed[0]) + "</failed>"
                 response = response + "<tasks>"
-                qry = db.query("SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.state,t.backupid,t.backuptyp FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
+                qry = db.query("SELECT t.id,t.name,t.action,t.schedule,t.last_run,t.state,t.backupid,t.backuptyp,t.backupfilesid FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "';")
                 for row in qry:
                     response = response + "<task>"
                     response = response + "<id>"+str(row[0])+"</id>"
@@ -157,6 +157,7 @@ class myHandler(BaseHTTPRequestHandler):
                     response = response + "<state>"+str(row[5])+"</state>"
                     response = response + "<backupid>"+str(row[6])+"</backupid>"
                     response = response + "<backuptyp>"+str(row[7])+"</backuptyp>"
+                    response = response + "<backupfilesid>"+str(row[8])+"</backupfilesid>"
                     response = response + "</task>"
                 response = response + "</tasks>"
                 response = response + "</data>"
@@ -178,7 +179,7 @@ class myHandler(BaseHTTPRequestHandler):
                 response = response + "</info>"
                 response = response + "<data>"
                 response = response + "<restores>"
-                qry = db.query("SELECT t.id,t.name,t.state,t.backupid,t.backuptyp FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.action='restore';")
+                qry = db.query("SELECT t.id,t.name,t.state,t.backupid,t.backuptyp,t.backupfilesid FROM '143_tasks' t INNER JOIN '143_backups' bu on t.backupid = bu.id INNER JOIN '143_pool' p on bu.pool_src = p.id WHERE p.ownerid = '" + self.get_session('userid') + "' AND t.action='restore';")
                 for row in qry:
                     response = response + "<restore>"
                     response = response + "<id>"+str(row[0])+"</id>"
@@ -186,6 +187,7 @@ class myHandler(BaseHTTPRequestHandler):
                     response = response + "<state>"+str(row[2])+"</state>"
                     response = response + "<backupid>"+str(row[3])+"</backupid>"
                     response = response + "<backuptyp>"+str(row[4])+"</backuptyp>"
+                    response = response + "<backupfilesid>"+str(row[5])+"</backupfilesid>"
                     response = response + "</restore>"
                 response = response + "</restores>"
                 response = response + "</data>"
@@ -370,7 +372,7 @@ class myHandler(BaseHTTPRequestHandler):
                     response = response + "<data>"
                     response = response + "<backupid>"+backupid+"</backupid>"
                     response = response + "<tasks>"
-                    qry = db.query("SELECT id,name,action,schedule,last_run,state,backupid,backuptyp FROM '143_tasks' WHERE backupid='"+backupid+"' AND action='backup' ORDER BY 'id' DESC LIMIT 80;")
+                    qry = db.query("SELECT id,name,action,schedule,last_run,state,backupid,backuptyp,backupfilesid FROM '143_tasks' WHERE backupid='"+backupid+"' AND action='backup' ORDER BY 'id' DESC LIMIT 80;")
                     for row in qry:
                         response = response + "<task>"
                         response = response + "<id>"+str(row[0])+"</id>"
@@ -381,6 +383,7 @@ class myHandler(BaseHTTPRequestHandler):
                         response = response + "<state>"+str(row[5])+"</state>"
                         response = response + "<backupid>"+str(row[6])+"</backupid>"
                         response = response + "<backuptyp>"+str(row[7])+"</backuptyp>"
+                        response = response + "<backupfilesid>"+str(row[8])+"</backupfilesid>"
                         response = response + "</task>"
                     response = response + "</tasks>"
                     response = response + "</data>"
@@ -587,7 +590,7 @@ class myHandler(BaseHTTPRequestHandler):
                     qry = db.query("SELECT date FROM '143_backupfiles' WHERE id = '" + backupfile + "';")
                     backupfileinfo = qry.fetchone()
                     name = "Restore backup "+str(taskinfo[0])+" from "+str(backupfileinfo[0])
-                    qry = db.query("INSERT INTO '143_tasks' (name,action,state,backupid,backuptyp) VALUES ('"+str(name)+"','restore','waiting','"+str(taskinfo[1])+"', '"+str(backupfile)+"');")
+                    qry = db.query("INSERT INTO '143_tasks' (name,action,state,backupid,backupfilesid) VALUES ('"+str(name)+"','restore','waiting','"+str(taskinfo[1])+"', '"+str(backupfile)+"');")
                     
                     response = "<response>"
                     response = response + "<info>"

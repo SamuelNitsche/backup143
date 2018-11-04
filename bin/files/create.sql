@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS "143_tasks" (
 	last_run VARCHAR(255),
 	state VARCHAR(255),
 	backupid integer,
-	backuptyp VARCHAR(255)
+	backuptyp VARCHAR(255),
+    backupfilesid integer
 );
 
 CREATE TABLE IF NOT EXISTS "143_pool" (
