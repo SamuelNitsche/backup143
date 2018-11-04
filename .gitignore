@@ -1,4 +1,6 @@
 log/
 tmp/
 bin/both/__pycache__/
+bin/both/backup/__pycache__/
+bin/both/restore/__pycache__/
 backup143.db
