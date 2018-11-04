@@ -27,7 +27,6 @@ def backupfailed(task, err):
     updatelastrundate(task)
 
 
-
 def updatelastrundate(task):
     date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     db.query('UPDATE \'143_tasks\' SET \'last_run\' = \'' + date + '\' WHERE id = ' + str(task))
@@ -51,11 +50,14 @@ while True:
                      'c.password AS password, '
                      'a.state, '
                      'b.compression, '
-                     'a.backuptyp as type '
+                     'a.backuptyp as type, '
+                     'b.last_full_run, '
+                     'a.action '
                      'FROM \'143_tasks\' AS a '
                      'JOIN \'143_backups\' AS b ON a.backupid = b.id '
                      'JOIN \'143_pool\' AS c ON b.pool_src = c.id '
-                     'JOIN \'143_pool\' AS d ON b.pool_dst = d.id')
+                     'JOIN \'143_pool\' AS d ON b.pool_dst = d.id '
+                     'WHERE a.action = \'backup\'')
 
     tasks = query.fetchall()
     for task in tasks:
