@@ -54,6 +54,8 @@ class Restore:
                     # Check if file hash has changed (only for incremental backup)
                     self.db.log(self.task['id'], "Restored file " + file)
                     # Copy file to new directory (preserve metadata)
+                    if os.path.isfile(os.path.join(self.task['source'], subdir)):
+                        os.remove(os.path.join(self.task['source'], subdir))
                     shutil.copy2(os.path.join(subdir, file), os.path.join(self.task['source'], subdir))
                     date = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
                     
