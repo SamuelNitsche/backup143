@@ -138,9 +138,6 @@ class Backup {
 		var apiportheader = req.getResponseHeader('X-APIPORT');
 		
 		var self = this;
-		
-        alert(id);
-        
         
 		$.ajax({
 			type: "post",

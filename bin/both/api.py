@@ -387,23 +387,45 @@ class myHandler(BaseHTTPRequestHandler):
                 compare = form['compare'].value
                 encrypt = form['encrypt'].value
                 compression = form['compression'].value
-				
+                userid = self.get_session('userid')
+                
                 db = dbmanager()
-                qry = db.query("INSERT INTO '143_backups' (pool_src,pool_dst,compare,encrypt,compression) VALUES ('"+pool_src+"','"+pool_dst+"','"+compare+"','"+encrypt+"','"+compression+"');")
-				
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Created Backup!"))
+                qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid='"+userid+"' AND id='"+pool_src+"';")
+                checkdependency_src = qry.fetchone()
+                qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid='"+userid+"' AND id='"+pool_dst+"';")
+                checkdependency_dst = qry.fetchone()
+                
+                if checkdependency_src[0] == 1 and checkdependency_dst[0] == 1:
+                    qry = db.query("INSERT INTO '143_backups' (pool_src,pool_dst,compare,encrypt,compression) VALUES ('"+pool_src+"','"+pool_dst+"','"+compare+"','"+encrypt+"','"+compression+"');")
+                    
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Created Backup!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>The Pool you selected doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Pool not found for user!"))
             # CREATE TASK
             elif self.path=="/post/createtask":
                 form = cgi.FieldStorage(
@@ -417,27 +439,47 @@ class myHandler(BaseHTTPRequestHandler):
                 backuptyp = form['backuptyp'].value
                 time = form['time'].value
                 days = form['days'].value
+                userid = self.get_session('userid')
                     
                 time = time.split(":")
 
                 cron = time[1] + " " + time[0] + " * * " + days
 				
                 db = dbmanager()
-                qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,state,backupid,backuptyp) VALUES ('"+name+"','"+action+"','"+cron+"','waiting','"+backupid+"', '"+backuptyp+"');")
-				
-                response = "<response>"
-                response = response + "<info>"
-                response = response + "<status>OK</status>"
-                response = response + "</info>"
-                response = response + "</response>"
-                self.send_response(200)
-                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                self.send_header('Access-Control-Allow-Credentials','true')
-                self.send_header('Content-type','text/xml')
-                self.end_headers()
-                self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                log = logsys('api')
-                log.write(str("Successful: Created Task!"))
+                qry = db.query("SELECT COUNT(*) FROM '143_backups' b INNER JOIN '143_pool' p ON b.pool_src = p.id WHERE p.ownerid='"+userid+"' AND b.id='"+backupid+"';")
+                checkdependency = qry.fetchone()
+                
+                if checkdependency[0] == 1:
+                    qry = db.query("INSERT INTO '143_tasks' (name,action,schedule,state,backupid,backuptyp) VALUES ('"+name+"','"+action+"','"+cron+"','waiting','"+backupid+"', '"+backuptyp+"');")
+                    
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>OK</status>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("Successful: Created Task!"))
+                else:
+                    response = "<response>"
+                    response = response + "<info>"
+                    response = response + "<status>ERROR</status>"
+                    response = response + "<message>The Backup you selected doesn't exist or doesn't belong to you!</message>"
+                    response = response + "</info>"
+                    response = response + "</response>"
+                    self.send_response(200)
+                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                    self.send_header('Access-Control-Allow-Credentials','true')
+                    self.send_header('Content-type','text/xml')
+                    self.end_headers()
+                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                    log = logsys('api')
+                    log.write(str("ERROR: Backup not found for user!"))
             ##########################################
             # UPDATE COMMAND (Pool, Backup, Task)    #
             ##########################################
@@ -532,24 +574,45 @@ class myHandler(BaseHTTPRequestHandler):
                 usercheck = qry.fetchone()
                 
                 if(usercheck[0] == 1):
-                    qry = db.query("UPDATE '143_backups' SET pool_src='"+pool_src+"',pool_dst='"+pool_dst+"',compare='"+compare+"',encrypt='"+encrypt+"',compression='"+compression+"' WHERE id='"+id+"';")
+                    qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid='"+userid+"' AND id='"+pool_src+"';")
+                    checkdependency_src = qry.fetchone()
+                    qry = db.query("SELECT COUNT(*) FROM '143_pool' WHERE ownerid='"+userid+"' AND id='"+pool_dst+"';")
+                    checkdependency_dst = qry.fetchone()
                     
-                    response = "<response>"
-                    response = response + "<info>"
-                    response = response + "<status>OK</status>"
-                    response = response + "</info>"
-                    response = response + "<data>"
-                    response = response + "<id>"+id+"</id>"
-                    response = response + "</data>"
-                    response = response + "</response>"
-                    self.send_response(200)
-                    self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
-                    self.send_header('Access-Control-Allow-Credentials','true')
-                    self.send_header('Content-type','text/xml')
-                    self.end_headers()
-                    self.wfile.write(bytes(xmlheader + response, 'utf8'))
-                    log = logsys('api')
-                    log.write(str("Successful: Updated Backup!"))
+                    if checkdependency_src[0] == 1 and checkdependency_dst[0] == 1:
+                        qry = db.query("UPDATE '143_backups' SET pool_src='"+pool_src+"',pool_dst='"+pool_dst+"',compare='"+compare+"',encrypt='"+encrypt+"',compression='"+compression+"' WHERE id='"+id+"';")
+                        
+                        response = "<response>"
+                        response = response + "<info>"
+                        response = response + "<status>OK</status>"
+                        response = response + "</info>"
+                        response = response + "<data>"
+                        response = response + "<id>"+id+"</id>"
+                        response = response + "</data>"
+                        response = response + "</response>"
+                        self.send_response(200)
+                        self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                        self.send_header('Access-Control-Allow-Credentials','true')
+                        self.send_header('Content-type','text/xml')
+                        self.end_headers()
+                        self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                        log = logsys('api')
+                        log.write(str("Successful: Updated Backup!"))
+                    else:
+                        response = "<response>"
+                        response = response + "<info>"
+                        response = response + "<status>ERROR</status>"
+                        response = response + "<message>The Pool you selected doesn't exist or doesn't belong to you!</message>"
+                        response = response + "</info>"
+                        response = response + "</response>"
+                        self.send_response(200)
+                        self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                        self.send_header('Access-Control-Allow-Credentials','true')
+                        self.send_header('Content-type','text/xml')
+                        self.end_headers()
+                        self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                        log = logsys('api')
+                        log.write(str("ERROR: Pool not found for user!"))
                 else:
                     response = "<response>"
                     response = response + "<info>"
