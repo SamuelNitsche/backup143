@@ -3,7 +3,7 @@ from crontab import CronTab
 from datetime import datetime
 import time
 from bin.both.utils import recordbackupfile
-from threading import Thread
+import _thread
 
 db = dbmanager(True)
 threshold = 10
@@ -115,4 +115,4 @@ def checkforbackups():
 
         time.sleep(10)
 
-Thread(target = checkforbackups).start()
+_thread.start_new_thread(checkforbackups, ())

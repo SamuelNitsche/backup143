@@ -1,7 +1,7 @@
 from bin.both.dbcon import dbmanager
 from datetime import datetime
 import time
-from threading import Thread
+import _thread
 
 db = dbmanager(True)
 
@@ -73,7 +73,7 @@ def checkforrestores():
                 from bin.both.restore.fs_local import Restore
 
             # Check if task is running and not finished
-            if task['state'] is not 'finished' and task['state'] is not 'running':
+            if task['state'] != 'finished' and task['state'] != 'running':
                 print('Starting normal for task ' + str(task['id']))
                 startrestore(task['id'])
                 # Initialize restore task
@@ -89,4 +89,4 @@ def checkforrestores():
                     print(e)
         time.sleep(10)
         
-Thread(target = checkforrestores).start()
+_thread.start_new_thread(checkforrestores, ())
