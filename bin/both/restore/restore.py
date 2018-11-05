@@ -41,6 +41,8 @@ def checkforrestores():
                          'a.schedule, '
                          'a.id, '
                          'a.last_run, '
+                         'a.backupfilesid, '
+                         'a.backupid, '
                          'c.system AS source_fs, '
                          'd.system AS dest_fs, '
                          'c.host AS host, '
@@ -50,16 +52,11 @@ def checkforrestores():
                          'b.compression, '
                          'a.backuptyp as type, '
                          'b.last_full_run, '
-                         'a.action, '
-                         'e.date AS backupfiledate, '
-                         'e.taskid AS backupfiletask, '
-                         'e.state AS backupfilestate, '
-                         'e.path AS backupfilepath '
+                         'a.action '
                          'FROM \'143_tasks\' AS a '
                          'JOIN \'143_backups\' AS b ON a.backupid = b.id '
                          'JOIN \'143_pool\' AS c ON b.pool_src = c.id '
                          'JOIN \'143_pool\' AS d ON b.pool_dst = d.id '
-                         'JOIN \'143_backupfiles\' AS e ON a.backupfilesid = e.id '
                          'WHERE a.action = \'restore\'')
 
         tasks = query.fetchall()
@@ -79,14 +76,14 @@ def checkforrestores():
                 # Initialize restore task
                 restore = Restore(task)
                 # Start restore
-                try:
-                    result = restore.restore()
-                    finishrestore(result)
-                    print('Restore for task ' + str(task['id']) + ' created')
-                except Exception as e:
-                    restorefailed(task['id'], e)
-                    print('Restore failed')
-                    print(e)
+                #try:
+                result = restore.restore()
+                finishrestore(result)
+                print('Restore for task ' + str(task['id']) + ' created')
+                #except Exception as e:
+                #    restorefailed(task['id'], e)
+                #    print('Restore failed')
+                #    print(e)
         time.sleep(10)
         
 _thread.start_new_thread(checkforrestores, ())
