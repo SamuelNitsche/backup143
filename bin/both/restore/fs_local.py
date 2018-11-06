@@ -1,5 +1,6 @@
 import os
 import zipfile
+import tarfile
 import shutil
 from bin.both.dbcon import dbmanager
 from datetime import datetime
@@ -66,11 +67,24 @@ class Restore:
                         if os.path.isfile(os.path.join(self.task['source'], subdir)):
                             os.remove(os.path.join(self.task['source'], subdir))
                         shutil.copy2(os.path.join(subdir, file), os.path.join(self.task['source'], subdir))
+        
+            elif self.task['compression'] == 'tar':
+                # Check if destination folder exists
+                if not os.path.isdir(self.task['dest']):
+                    raise Exception('Destination directory does not exist')
+                if not os.path.isdir(self.task['source']):
+                    raise Exception('Source directory does not exist!')
 
+                # extract zipfile
+                tarf = tarfile.open(backupfilespath[0], "r:gz")
+                tarf.extractall()
+
+                tarf.close()
+                
             else:
                 # No valid compression mode detected
                 raise Exception('Could not determine compression mode')
-            
+
         date = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
         data = {
             'task': self.task['id'],
