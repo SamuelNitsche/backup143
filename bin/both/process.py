@@ -1,10 +1,12 @@
+import time
+
 class process():
     def start(self):
         import bin.both.webserver
         import bin.both.api
-        import bin.both.backup.backup
-        import bin.both.restore.restore
+        from bin.both.backup.backup import checkforbackups
+        from bin.both.restore.restore import checkforrestores
         while True:
-            '''thread = threading.Thread(target=self.run, args=())
-            thread.daemon = True
-            thread.start()'''
+            checkforbackups()
+            checkforrestores()
+            time.sleep(30)
