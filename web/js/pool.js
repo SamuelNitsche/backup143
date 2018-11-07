@@ -97,11 +97,7 @@ class Pool {
 		html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='pool_name' value='"+poolinfo[1]+"'/></td></tr>";
 		html = html + "<tr><td><label>File System: </label></td><td><select id='pool_system'>";
         html = html + "<option value='local'>Local</option>";
-        html = html + "<option value='cifs'>CIFS</option>";
         html = html + "<option value='ftp'>FTP</option>";
-        html = html + "<option value='sftp'>SFTP</option>";
-        html = html + "<option value='nfs'>NFS</option>";
-        html = html + "<option value='smb'>SMB</option>";
         html = html + "</select></td></tr>";
 		html = html + "<tr><td><label>Host: </label></td><td><input type='text' id='pool_host' value='"+poolinfo[3]+"'/></td></tr>";
 		html = html + "<tr><td><label>Port: </label></td><td><input type='text' id='pool_port' value='"+poolinfo[4]+"'/></td></tr>";
@@ -219,11 +215,7 @@ class Pool {
 		html = html + "<tr><td><label>Name: </label></td><td><input type='text' id='pool_name'/></td></tr>";
 		html = html + "<tr><td><label>File System: </label></td><td><select id='pool_system'>";
         html = html + "<option value='local'>Local</option>";
-        html = html + "<option value='cifs'>CIFS</option>";
         html = html + "<option value='ftp'>FTP</option>";
-        html = html + "<option value='sftp'>SFTP</option>";
-        html = html + "<option value='nfs'>NFS</option>";
-        html = html + "<option value='smb'>SMB</option>";
         html = html + "</select></td></tr>";
 		html = html + "<tr><td><label>Host: </label></td><td><input type='text' id='pool_host'/></td></tr>";
 		html = html + "<tr><td><label>Port: </label></td><td><input type='text' id='pool_port'/></td></tr>";
