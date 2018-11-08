@@ -12,6 +12,7 @@ from bin.both.dbcon import dbmanager
 import http.cookies
 from bin.both.config import config_var
 from pathlib import Path
+import hashlib
 
 LISTENON = config_var('LOCAL', 'LISTEN')
 PORT_NUMBER = config_var('API', 'PORT')
@@ -240,8 +241,61 @@ class myHandler(BaseHTTPRequestHandler):
             ############################################################
             # GET INFORMATIONS FOR SPECIFIC ID (Pool, Backup, Task)    #
             ############################################################
+            # USER CHANGE PASSWORD
+            if self.path=="/post/changepw":
+                form = cgi.FieldStorage(
+                    fp=self.rfile, 
+                    headers=self.headers,
+                    environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
+                    
+                userid = self.get_session('userid')
+                passwordhash = hashlib.sha512(str(form['password'].value).encode('utf8')).hexdigest()
+                
+                db = dbmanager()
+                qry = db.query("UPDATE '143_users' SET password = '"+passwordhash+"' WHERE id = '"+userid+"';")
+                
+                response = "<response>"
+                response = response + "<info>"
+                response = response + "<status>OK</status>"
+                response = response + "</info>"
+                response = response + "<data>"
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                self.send_header('Access-Control-Allow-Credentials','true')
+                self.send_header('Content-type','text/xml')
+                self.end_headers()
+                self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                log = logsys('api')
+                log.write(str("Successful: Changing Password!"))
+            
+            # USER CHANGE EMAIL
+            elif self.path=="/post/changemail":
+                form = cgi.FieldStorage(
+                    fp=self.rfile, 
+                    headers=self.headers,
+                    environ={'REQUEST_METHOD':'POST', 'CONTENT_TYPE':self.headers['Content-Type'], })
+                    
+                userid = self.get_session('userid')
+                email = str(form['email'].value)
+                
+                db = dbmanager()
+                qry = db.query("UPDATE '143_users' SET email = '"+email+"' WHERE id = '"+userid+"';")
+                
+                response = "<response>"
+                response = response + "<info>"
+                response = response + "<status>OK</status>"
+                response = response + "</info>"
+                response = response + "<data>"
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', LISTENON + ':' + WEB_PORT_NUMBER)
+                self.send_header('Access-Control-Allow-Credentials','true')
+                self.send_header('Content-type','text/xml')
+                self.end_headers()
+                self.wfile.write(bytes(xmlheader + response, 'utf8'))
+                log = logsys('api')
+                log.write(str("Successful: Changing Password!"))
             # GET TASKLOG FOR TASK
-            if self.path=="/post/tasklog":
+            elif self.path=="/post/tasklog":
                 form = cgi.FieldStorage(
                     fp=self.rfile, 
                     headers=self.headers,
